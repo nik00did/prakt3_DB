@@ -1,0 +1,506 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="b9223a6e-b215-4975-8d49-987aa9ac5e87" name="Default Changelist" comment="" />
+    <ignored path="$PROJECT_DIR$/.tmp/" />
+    <ignored path="$PROJECT_DIR$/temp/" />
+    <ignored path="$PROJECT_DIR$/tmp/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/server/server.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="437">
+              <caret line="19" column="11" selection-start-line="19" selection-start-column="11" selection-end-line="19" selection-end-column="11" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/index.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="207">
+              <caret line="9" column="25" selection-start-line="9" selection-start-column="25" selection-end-line="9" selection-end-column="25" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/server/db/dal/dao/mongoDB/usersDaoMongoDB.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1449">
+              <caret line="63" column="2" selection-start-line="63" selection-start-column="2" selection-end-line="63" selection-end-column="2" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/server/db/dal/dal.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="92">
+              <caret line="4" selection-start-line="4" selection-end-line="22" selection-end-column="2" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/controller/index.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="4508">
+              <caret line="196" column="22" selection-start-line="196" selection-start-column="16" selection-end-line="196" selection-end-column="22" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/public/view/source/navigation.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="23">
+              <caret line="103" lean-forward="true" selection-start-line="103" selection-end-line="103" />
+              <folding>
+                <element signature="n#!!block;n#drawHomeContent#0" />
+                <element signature="n#!!block;n#addTableRow#0" />
+                <element signature="n#!!block;n#drawBarbersContent#0" />
+                <element signature="n#!!block;n#addServiceItem#0" />
+                <element signature="n#!!block;n#drawServicesContent#0" />
+                <element signature="n#!!block;n#drawLogInContent#0" />
+                <element signature="n#!!block;n#drawSingUpContent#0" />
+                <element signature="n#!!block;n#drawAdminPage#0" />
+                <element signature="n#!!block;n#drawHomePage#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>again</find>
+      <find>list</find>
+      <find>good_reg</find>
+      <find>console.log</find>
+    </findStrings>
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/public/db/dal/dao/dao.js" />
+        <option value="$PROJECT_DIR$/db/dal/dao/usersDaoMongoDB.js" />
+        <option value="$PROJECT_DIR$/db/dal/dao/ordersDaoMongoDB.js" />
+        <option value="$PROJECT_DIR$/db/dal/dao/barbersDaoMongoDB.js" />
+        <option value="$PROJECT_DIR$/db/dal/dao/dao.js" />
+        <option value="$PROJECT_DIR$/public/navigation.js" />
+        <option value="$PROJECT_DIR$/public/index.js" />
+        <option value="$PROJECT_DIR$/public/view/prices.html" />
+        <option value="$PROJECT_DIR$/public/view/view.js" />
+        <option value="$PROJECT_DIR$/db/dal/dao/mongoDB/abminDaoMongoDB.js" />
+        <option value="$PROJECT_DIR$/db/dal/dal.js" />
+        <option value="$PROJECT_DIR$/db/dal/dao/mongoDB/usersDaoMongoDB.js" />
+        <option value="$PROJECT_DIR$/db/dal/dao/mongoDB/barbersDaoMongoDB.js" />
+        <option value="$PROJECT_DIR$/public/view/style.css" />
+        <option value="$PROJECT_DIR$/public/view/navigation.js" />
+        <option value="$PROJECT_DIR$/public/controller/validator.js" />
+        <option value="$PROJECT_DIR$/public/controller/sendToServer.js" />
+        <option value="$PROJECT_DIR$/public/view/index.html" />
+        <option value="$PROJECT_DIR$/validator.js" />
+        <option value="$PROJECT_DIR$/server.js" />
+        <option value="$PROJECT_DIR$/server/validator.js" />
+        <option value="$PROJECT_DIR$/server/db/dal/dao/dao.js" />
+        <option value="$PROJECT_DIR$/server/db/dal/dao/mongoDB/barbersDaoMongoDB.js" />
+        <option value="$PROJECT_DIR$/public/view/index.js" />
+        <option value="$PROJECT_DIR$/public/index.html" />
+        <option value="$PROJECT_DIR$/public/model/index.js" />
+        <option value="$PROJECT_DIR$/server/db/dal/dal.js" />
+        <option value="$PROJECT_DIR$/server/model.js" />
+        <option value="$PROJECT_DIR$/public/controller/source/sendToServer.js" />
+        <option value="$PROJECT_DIR$/server/db/dal/dao/mongoDB/usersDaoMongoDB.js" />
+        <option value="$PROJECT_DIR$/public/controller/source/validator.js" />
+        <option value="$PROJECT_DIR$/public/view/source/navigation.js" />
+        <option value="$PROJECT_DIR$/public/controller/index.js" />
+        <option value="$PROJECT_DIR$/server/server.js" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="950" />
+    <option name="width" value="980" />
+    <option name="height" value="1040" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="практическая 3" type="b2602c69:ProjectViewProjectNode" />
+              <item name="практическая 3" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="практическая 3" type="b2602c69:ProjectViewProjectNode" />
+              <item name="практическая 3" type="462c0819:PsiDirectoryNode" />
+              <item name="public" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="практическая 3" type="b2602c69:ProjectViewProjectNode" />
+              <item name="практическая 3" type="462c0819:PsiDirectoryNode" />
+              <item name="public" type="462c0819:PsiDirectoryNode" />
+              <item name="view" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="практическая 3" type="b2602c69:ProjectViewProjectNode" />
+              <item name="практическая 3" type="462c0819:PsiDirectoryNode" />
+              <item name="public" type="462c0819:PsiDirectoryNode" />
+              <item name="view" type="462c0819:PsiDirectoryNode" />
+              <item name="source" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="практическая 3" type="b2602c69:ProjectViewProjectNode" />
+              <item name="практическая 3" type="462c0819:PsiDirectoryNode" />
+              <item name="server" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../лабороторная 2" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\User\PROJECTS\Базы данных\практическая 3\server" />
+      <recent name="C:\Users\User\PROJECTS\Базы данных\практическая 3\public\view\source" />
+      <recent name="C:\Users\User\PROJECTS\Базы данных\практическая 3\public\controller\source" />
+      <recent name="C:\Users\User\PROJECTS\Базы данных\практическая 3\public\view" />
+      <recent name="C:\Users\User\PROJECTS\Базы данных\практическая 3\public\controller" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="b9223a6e-b215-4975-8d49-987aa9ac5e87" name="Default Changelist" comment="" />
+      <created>1569223404916</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1569223404916</updated>
+      <workItem from="1569223406434" duration="10172000" />
+      <workItem from="1569266609230" duration="7071000" />
+      <workItem from="1569305213115" duration="12810000" />
+      <workItem from="1569327125727" duration="51000" />
+      <workItem from="1569341437906" duration="17565000" />
+      <workItem from="1569404495603" duration="3314000" />
+      <workItem from="1569423599887" duration="69000" />
+      <workItem from="1569583993549" duration="3182000" />
+      <workItem from="1569589716386" duration="423000" />
+      <workItem from="1569610553845" duration="6920000" />
+      <workItem from="1569751032156" duration="14296000" />
+      <workItem from="1569780683000" duration="7396000" />
+      <workItem from="1569867005106" duration="57000" />
+      <workItem from="1569867138645" duration="21000" />
+      <workItem from="1569871063695" duration="1240000" />
+      <workItem from="1569916688488" duration="47931000" />
+      <workItem from="1570004372030" duration="2381000" />
+      <workItem from="1570009432903" duration="3444000" />
+      <workItem from="1570029954386" duration="85000" />
+      <workItem from="1571118762880" duration="1343000" />
+      <workItem from="1571214417772" duration="10000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="139781000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
+    <layout>
+      <window_info id="Structure" order="0" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="1" side_tool="true" />
+      <window_info content_ui="combo" id="Project" order="2" visible="true" weight="0.12095175" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32941177" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="8" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="9" visible="true" weight="0.2514706" />
+      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+    </layout>
+    <layout-to-restore>
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.19431593" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32941177" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="8" />
+      <window_info anchor="bottom" id="Terminal" order="9" visible="true" weight="0.09852941" />
+      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+    </layout-to-restore>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/public/db/dal/dao/dao.js" />
+    <entry file="file://$PROJECT_DIR$/server/db/dal/dao/mongoDB/ordersDaoMongoDB.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Temp/Rar$DIa3288.14314/main.test.js" />
+    <entry file="file://$PROJECT_DIR$/../../Homework(frontend)/Homework13/remade1.2/users_chat/public/drawOnePage.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1346">
+          <caret line="209" lean-forward="true" selection-start-line="209" selection-end-line="209" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Temp/Rar$DIa3288.25269/chatDAL.test.js" />
+    <entry file="file://$USER_HOME$/AppData/Local/Temp/Rar$DIa3288.20634/main.test.js" />
+    <entry file="file://$PROJECT_DIR$/public/view/barbers.html" />
+    <entry file="file://$PROJECT_DIR$/public/view/prices.html" />
+    <entry file="file://$PROJECT_DIR$/../../Homework(frontend)/Homework13/remade1.2/users_chat/public/view.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="31" column="29" lean-forward="true" selection-start-line="31" selection-start-column="29" selection-end-line="31" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../Homework(frontend)/Homework13/remade1.2/users_chat/public/controller.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="115">
+          <caret line="5" column="28" lean-forward="true" selection-start-line="5" selection-start-column="28" selection-end-line="5" selection-end-column="28" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/view/logIn.html" />
+    <entry file="file://$PROJECT_DIR$/db/dal/dao/mongoDB/abminDaoMongoDB.js" />
+    <entry file="file://$PROJECT_DIR$/public/view/index.html" />
+    <entry file="file://$PROJECT_DIR$/node_modules/send/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="844">
+          <caret line="617" column="10" lean-forward="true" selection-start-line="617" selection-start-column="10" selection-end-line="617" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/view/style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="457">
+          <caret line="239" column="17" lean-forward="true" selection-start-line="239" selection-start-column="17" selection-end-line="239" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="138">
+          <caret line="6" column="26" selection-start-line="6" selection-start-column="26" selection-end-line="6" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/raw-body/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="272" column="6" selection-start-line="272" selection-start-column="6" selection-end-line="272" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/mongoose/lib/error/validation.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="276">
+          <caret line="29" column="10" selection-start-line="29" selection-start-column="10" selection-end-line="29" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/mongoose/lib/connection.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="14">
+          <caret line="737" column="16" selection-start-line="737" selection-start-column="16" selection-end-line="737" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/mongoose/lib/error/validator.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="108">
+          <caret line="28" column="10" selection-start-line="28" selection-start-column="10" selection-end-line="28" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/db/dal/dao/mongoDB/barbersDaoMongoDB.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="376">
+          <caret line="63" column="35" selection-start-line="63" selection-start-column="35" selection-end-line="63" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/mongodb/lib/core/error.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="43" column="11" selection-start-line="43" selection-start-column="11" selection-end-line="43" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/mongoose/lib/types/core_array.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="161">
+          <caret line="461" column="3" lean-forward="true" selection-start-line="461" selection-start-column="3" selection-end-line="461" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/db/dal/dao/dao.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="253">
+          <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/validator.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="345">
+          <caret line="15" lean-forward="true" selection-start-line="15" selection-end-line="15" />
+          <folding>
+            <marker date="1569775391461" expanded="true" signature="803:1044" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/view/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="251">
+          <caret line="18" column="20" selection-start-line="18" selection-start-column="9" selection-end-line="18" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/model.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="241">
+          <caret line="54" lean-forward="true" selection-start-line="54" selection-end-line="54" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/model/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="100">
+          <caret line="43" column="32" lean-forward="true" selection-start-line="43" selection-start-column="32" selection-end-line="43" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/controller/source/sendToServer.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="184">
+          <caret line="23" column="49" selection-start-line="23" selection-start-column="49" selection-end-line="23" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/controller/source/validator.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="46">
+          <caret line="2" selection-start-line="2" selection-end-line="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/server.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="437">
+          <caret line="19" column="11" selection-start-line="19" selection-start-column="11" selection-end-line="19" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="207">
+          <caret line="9" column="25" selection-start-line="9" selection-start-column="25" selection-end-line="9" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/db/dal/dao/mongoDB/usersDaoMongoDB.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1449">
+          <caret line="63" column="2" selection-start-line="63" selection-start-column="2" selection-end-line="63" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/db/dal/dal.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="92">
+          <caret line="4" selection-start-line="4" selection-end-line="22" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/controller/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4508">
+          <caret line="196" column="22" selection-start-line="196" selection-start-column="16" selection-end-line="196" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/view/source/navigation.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="23">
+          <caret line="103" lean-forward="true" selection-start-line="103" selection-end-line="103" />
+          <folding>
+            <element signature="n#!!block;n#drawHomeContent#0" />
+            <element signature="n#!!block;n#addTableRow#0" />
+            <element signature="n#!!block;n#drawBarbersContent#0" />
+            <element signature="n#!!block;n#addServiceItem#0" />
+            <element signature="n#!!block;n#drawServicesContent#0" />
+            <element signature="n#!!block;n#drawLogInContent#0" />
+            <element signature="n#!!block;n#drawSingUpContent#0" />
+            <element signature="n#!!block;n#drawAdminPage#0" />
+            <element signature="n#!!block;n#drawHomePage#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>

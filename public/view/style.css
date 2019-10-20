@@ -1,0 +1,242 @@
+body {
+    width: 100%;
+    height: 100%;
+    min-width: 100%;
+    min-height: 100%;
+    font-family: Arial;
+    background-image: url("image/background.png");
+    background-size: cover;
+    background-attachment: fixed;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+button{
+    border: none;
+    outline-style: none;
+    background: none;
+    font-size: 20px;
+}
+.header {
+    width: 95%;
+    height: 60px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.header__section {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid #fff;
+}
+
+.header__item {
+    width: 150px;
+    height: 100%;
+    text-align: center;
+    text-transform: uppercase;
+    color: #fff;
+    font-weight: bold;
+}
+.header__item:hover {
+    background: rgba(254, 229, 173, 0.5);
+    color: #000;
+}
+.header__item:active {
+    background: rgba(249, 158, 93,0.5);
+    color: #fff;
+}
+
+.main {
+    margin-top: 50px;
+    width: 90%;
+    min-height: 700px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+img {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+.main__item {
+    margin-top: 80px;
+    width: 30%;
+    height: 90%;
+    background: rgba(254, 229, 173, 0.5);
+    border-radius: 20px;
+}
+
+.main__img {
+    margin-top: 40px;
+    width: 30%;
+}
+
+.main__item:hover {
+    background: rgba(249, 158, 93,0.5);
+}
+
+.table{
+    /*border: 1px solid #fff;*/
+    width: 100%;
+    height: 100%;
+}
+
+.table__row {
+    width: 100%;
+    height: 30%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border-bottom: 1px solid #fff;
+    background: rgba(255, 255, 255, 0.6);
+}
+
+.table__row_main {
+    background: rgba(249, 158, 93,0.5);
+    color: #fff;
+    height: 30%;
+}
+
+.table__cell {
+    width: 20%;
+    text-align: center;
+    align-content: center;
+}
+.table__cell:hover {
+    background: rgba(254, 229, 173, 0.5);
+}
+
+.main__item-list {
+    width: 100%;
+    height: 60%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.main__lists-block {
+    display: flex;
+    flex-direction: row;
+    width: 400px;
+}
+
+.list__item {
+    height: 30px;
+    width: 100%;
+}
+
+.list {
+    width: 100%;
+    height: 100%;
+}
+
+.list__item_block{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-left:10px;
+    padding-right:10px;
+}
+
+.list__item_block:hover {
+    background: rgba(249, 158, 93,0.5);
+    color: #fff;
+}
+
+.main__form {
+    border-radius: 5px;
+    width: 100%;
+    height: 500px;
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    margin: 10%;
+}
+
+.form {
+    width: 450px;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+}
+
+.form__item {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px;
+}
+
+.form__item_menu {
+    background: rgba(255, 255, 255, 0.7);
+}
+
+.footer {
+    width: 95%;
+    height: 50px;
+    position: absolute;
+    bottom: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.footer__item {
+    color: #fff;
+    border-radius: 10px;
+    height: 100%;
+    padding: 5px;
+}
+
+.footer__item p:hover {
+    color: rgb(249, 158, 93);
+}
+
+.active {
+    color: rgb(249, 158, 93);
+}
+
+.formDivButtons {
+    width: 70%;
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.form__item_button {
+    width: 40%;
+    height: 100%;
+    background-color: rgba(249, 158, 93, 0.7);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    border-radius: 10px;
+}
+.form__item_button:hover {
+    background: rgba(254, 229, 173, 0.7);
+    color: #000;
+}
+
+.form__item_button:active {
+    background: rgba(254, 229, 173, 1);;
+    color: #fff;
+}
+
+#buttonOkSignUp {
+    width: 100px;
+    height: 30px;
+}
