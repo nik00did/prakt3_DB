@@ -4,29 +4,25 @@ const mongoose = require('mongoose');
 const barberSchema = new mongoose.Schema({
     firstName: {
         type: String,
-        required: true,
     },
     lastName: {
         type: String,
-        required: true,
     },
     email: {
         type: String,
-        unique: true,
-        required: true,
-    },
-    password: {
-        type: String,
-        required: true,
     },
     age: {
         type: Number,
-        required: true,
     },
     experience: {
         type: Number,
-        required: true,
     },
+    rating: {
+        type: Number,
+    },
+    salary: {
+        type: Number,
+    }
 });
 
 function BarbersDaoMongoDB () {
@@ -49,8 +45,15 @@ BarbersDaoMongoDB.prototype.init = function () {
 };
 
 BarbersDaoMongoDB.prototype.setBarber = async function (object) {
-    const barber = this._model(object);
-    await barber.save();
+    await this._model.create({
+        firstName: object._firstName,
+        lastName: object._lastName,
+        email: object._email,
+        age: object._age,
+        experience: object._experience,
+        rating: object._rating,
+        salary: object._salary
+    });
 };
 
 BarbersDaoMongoDB.prototype.getAllBarbers = async function () {
@@ -59,6 +62,17 @@ BarbersDaoMongoDB.prototype.getAllBarbers = async function () {
 
 BarbersDaoMongoDB.prototype.getBarber = async function (email) {
     return await this._model.findOne({email});
+};
+
+BarbersDaoMongoDB.prototype.updateBarber = async function (email, newSalary) {
+    await this._model.findOne({email}, (err, doc) => {
+        doc.salary = newSalary;
+        doc.save();
+    });
+};
+
+BarbersDaoMongoDB.prototype.deleteBarber = async function (email) {
+    await this._model.remove({email});
 };
 
 module.exports = BarbersDaoMongoDB;

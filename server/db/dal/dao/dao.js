@@ -14,6 +14,8 @@ Dao.prototype.getAllBarbers = function () {};
 
 Dao.prototype.getAllOrders = function () {};
 
+Dao.prototype.deleteBarber = function () {};
+
 Dao.prototype.getOrder = function () {};
 
 Dao.prototype.setOrder = function () {};

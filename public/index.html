@@ -2,14 +2,14 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Hear style</title>
+    <title>Hair style</title>
     <link rel="stylesheet" href="./view/style.css" />
 </head>
 <body id="body">
     <header id="header" class="header">
         <div id="headerItems" class="header__section">
-            <button id="home" class="header__item">
-                Домой
+            <button id="home" class="header__item currentHeaderItem">
+                Главная
             </button>
             <button id="services" class="header__item">
                 Услуги
@@ -25,8 +25,8 @@
             </button>
         </div>
         <div id="headerFunc" class="header__section">
-            <button id="signIn" class="header__item">
-                Записаться
+            <button id="record" class="header__item">
+                Запись
             </button>
             <button id="logIn" class="header__item">
                 Вход
@@ -34,15 +34,12 @@
         </div>
     </header>
     <main id="main" class="main">
-        <div class="main__img">
-            <img alt="Hear style" src="./view/image/icon2.jpg">
+        <h1 class="main__title">Добро пожаловать!</h1>
+        <button id="recording">Записаться</button>
+        <div class="main__icon">
+            <img alt="Hear style" src="./view/image/icon.png" />
         </div>
-        <div class="main__item">
-            <img alt="Hear style" src="./view/image/icon.png">
-        </div>
-        <div class="main__img">
-            <img alt="Hear style" src="./view/image/icon4.jpg">
-        </div>
+        <button id="scroll" class="button">&#8595</button>
     </main>
     <footer id="footer" class="footer">
         <div class="footer__item">
@@ -55,10 +52,9 @@
             <p>Адрес: пр. Яворницкого, 37</p>
         </div>
         <div class="footer__item">
-            <p>Heat style</p>
+            <p>Hair style</p>
         </div>
     </footer>
-
     <script src="./model/index.js"></script>
     <script src="./controller/source/sendToServer.js"></script>
     <script src="./controller/source/validator.js"></script>

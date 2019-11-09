@@ -39,7 +39,6 @@ UsersDaoMongoDB.prototype.init = function () {
     mongoose.connect('mongodb://localhost:27017/HearStyle', { useNewUrlParser: true });
     this._collection = true;
     this._model = mongoose.model('users', usersSchema);
-    console.log('Table connected!');
 };
 
 UsersDaoMongoDB.prototype.getAllUsers = async function () {

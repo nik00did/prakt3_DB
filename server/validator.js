@@ -36,4 +36,40 @@ Validator.prototype.isValidPassword = (password, config) => password === config;
 //     return false;
 // };
 
-module.exports = Validator;
+function ValidatorServices(array) {
+    this._array = array;
+
+    this.isAdded = type => {
+        for (let i = 0; i < this._array.length; i++) {
+            const temp = this._array[i];
+
+            if (temp._type === type) {
+                return true;
+            }
+        }
+
+        return false;
+    };
+}
+
+ValidatorServices.prototype.isValidInputed = (type, price) => {
+    return isInput(type) && isInput(price);
+};
+
+function ValidatorStore(store) {
+    this._store = store;
+
+    this.isAdded = type => {
+        for (let i = 0; i < this._store.length; i++) {
+            const temp = this._store[i];
+
+            if (temp._type === type) {
+                return true;
+            }
+        }
+
+        return false;
+    };
+}
+
+module.exports = { Validator, ValidatorServices, ValidatorStore };

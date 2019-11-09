@@ -2,9 +2,29 @@ const express = require('express');
 const bodyParse = require("body-parser");
 const jsonParser = bodyParse.json();
 const Dal = require('./db/dal/dal');
-const Validator = require('./validator');
+const {Validator, ValidatorServices, ValidatorStore} = require('./validator');
 const urlencodedParser = bodyParse.json();
-const { Model, User } = require('./model');
+const {Model, User, Barber, Service, Record, StoreItem} = require('./model');
+const email = require("../node_modules/emailjs/email");
+
+const sendToUsersEmail = (userEmail, userName, sendText, image) => {
+    const server = email.server.connect({
+        host: "smtp.gmail.com",
+        ssl: true,
+        user: "nik.hairstyle2019",
+        password: "2019hairstyle",
+    });
+
+    server.send({
+        text: sendText,
+        from: 'nik.hairstyle2019',
+        to: `${userName} ${userEmail}`,
+        cc: "",
+        subject: "Вы записаны!",
+    }, function (err, message) {
+        console.log(err || message);
+    });
+};
 
 const app = express();
 app.use(express.static('../public/'));
@@ -13,8 +33,15 @@ app.use(express.json());
 app.listen(3000, () => console.log('Listen post on 3000 port!'));
 
 const modelUsers = new Model()._users;
+const modelBarbers = new Model()._barbers;
+const modelServices = new Model()._services;
+const modelRecords = new Model()._records;
+const modelStore = new Model()._store;
 
 const validator = new Validator(modelUsers._users);
+const barbersValidator = new Validator(modelBarbers._barbers);
+const servicesValidator = new ValidatorServices(modelServices._services);
+const storeValidator = new ValidatorStore(modelStore._store);
 
 const dal = new Dal();
 dal.init();
@@ -24,37 +51,19 @@ app.post('/logIn', urlencodedParser, function (req, res) {
         return res.sendStatus(400);
     }
 
-    console.log("/logIn");
-
     let data = JSON.stringify(req.body);
     data = JSON.parse(data);
 
-    console.log(`что пришло`);
-    console.log(data.email, data.password);
-
-    console.log(`Валидация`);
-
-    if (validator.isValidLogIn(data.email, data.password)) {
-        console.log('is valid');
-    } else {
-        console.log('NO valid');
-    }
-
-    console.log(`Проверка регистрации`);
     let rez = validator.isSignedUp(data.email);
 
     if (rez) {
-        console.log(`ПРОШЕЛ ПРОВЕРКУ`);
-        console.log(rez);
         res.send({rez});
     } else {
-        console.log(`НЕ ПРОШЕЛ ПРОВЕРКУ`);
         res.send({rez: "bad_reg"});
     }
 });
 
-app.post('/signUp', urlencodedParser, function (req, res) {
-
+app.post('/signUp', urlencodedParser, async function (req, res) {
     if (!req.body) {
         return res.sendStatus(400);
     }
@@ -62,33 +71,20 @@ app.post('/signUp', urlencodedParser, function (req, res) {
     let data = JSON.stringify(req.body);
     data = JSON.parse(data);
 
-    console.log("/signUp");
-
     const newUser = new User(data.firstName, data.lastName, data.date, data.email, data.password);
 
-    if (!validator.isValidSignUp(data.email, data.password)) {
-        console.log('is valid');
-    } else {
-        console.log('NO valid');
-    }
-
-    console.log(`Проверка регистрации`);
-
     if (validator.isSignedUp(newUser._email)) {
-        console.log(`Уже зарегистрирован!!!!!!`);
-
         res.send("bad_reg");
     } else {
         modelUsers.setUser(newUser);
-        dal.setUser(newUser);  //._users.insert(modelUsers.getUsersLast());
-        console.log(`ПРОШЕЛ РЕГИСТРАЦИЮ`);
+        await dal.setUser(newUser);
         const newUserJson = JSON.stringify(newUser);
 
         res.send(newUserJson);
     }
 });
 
-app.post('/getUsersDataFromDB', urlencodedParser, async (request, res) => {
+app.get('/getUsersDataFromDB', urlencodedParser, async (request, res) => {
     const users = await dal.getAllUsers();
 
     if(modelUsers.getUsers().length !== users.length) {
@@ -97,21 +93,172 @@ app.post('/getUsersDataFromDB', urlencodedParser, async (request, res) => {
         }
     }
 
-    res.send(modelUsers.getUsers());
+    res.send(JSON.stringify(modelUsers.getUsers()));
 });
 
-
-app.post('/pushAdminToServer', urlencodedParser, async (req, res) => {
-    const temp = await req.body;
-    const users = modelUsers.getUsers();
-    const admin = new User(temp._firstName, temp._lastName, temp._date, temp._email, temp._password, temp._userType);
-
-    console.log(modelUsers.getUsers(), 'users data on server model');
-    console.log(modelUsers.getUsers().length === 0);
-    if (modelUsers.getUsers().length === 0) {
-        console.log('111111111111111111111111');
-        modelUsers.setUser(admin);
-        await dal.setUser(admin);
-        res.send(admin);
+app.post('/configAddBarber', urlencodedParser, async function (req, res) {
+    if (!req.body) {
+        return res.sendStatus(400);
     }
+
+    let data = JSON.stringify(req.body);
+    data = JSON.parse(data);
+
+    const newBarber = new Barber(data.firstName, data.lastName, data.email, data.age, data.experience, data.salary, data.rating);
+
+    if (barbersValidator.isSignedUp(newBarber._email)) {
+        res.send("bad_reg");
+    } else {
+        modelBarbers.setBarber(newBarber);
+        await dal.setBarber(newBarber);
+        const newBarberJson = JSON.stringify(newBarber);
+
+        res.send(newBarberJson);
+    }
+});
+
+app.post('/deleteBarberByEmail', urlencodedParser, async function (req, res) {
+    const emailBarber = req.body.email;
+
+    await dal.deleteBarber(emailBarber);
+});
+
+app.get('/getBarbersDataFromDB', urlencodedParser, async (request, res) => {
+    const barbers = await dal.getAllBarbers();
+
+    modelBarbers._barbers = [];
+
+    for (let i = 0; i < barbers.length; i++) {
+        modelBarbers.setBarber(new Barber(barbers[i].firstName, barbers[i].lastName, barbers[i].email, barbers[i].age, barbers[i].experience, barbers[i].salary, barbers[i].rating));
+    }
+
+    res.send(JSON.stringify(modelBarbers.getBarbers()));
+});
+
+app.post('/changeSalaryBarber', urlencodedParser, async function (req, res) {
+    const newSalaryBarber = req.body.newSalary;
+    const emailChangeSalaryBarber = req.body.email;
+    const currentBarber = modelBarbers.getBarberByEmail(emailChangeSalaryBarber);
+
+    await dal.updateBarber(currentBarber._email, newSalaryBarber);
+});
+
+app.get('/getServicesDataFromDB', urlencodedParser, async (request, res) => {
+    const services = await dal.getAllServices();
+
+    modelServices._services = [];
+
+    for (let i = 0; i < services.length; i++) {
+        modelServices.setService(new Service(services[i].type, services[i].price));
+    }
+
+    res.send(JSON.stringify(modelServices.getServices()));
+});
+
+app.post('/configAddService', urlencodedParser, async function (req, res) {
+    if (!req.body) {
+        return res.sendStatus(400);
+    }
+
+    let data = JSON.stringify(req.body);
+    data = JSON.parse(data);
+
+    const newService = new Service(data.type, data.price);
+
+    if (servicesValidator.isAdded(newService._type)) {
+        res.send("bad_reg");
+    } else {
+        modelServices.setService(newService);
+        await dal.setService(newService);
+        const newServiceJson = JSON.stringify(newService);
+
+        res.send(newServiceJson);
+    }
+});
+
+app.post('/deleteServiceByType', urlencodedParser, async function (req, res) {
+    const typeService = req.body.type;
+
+    await dal.deleteService(typeService);
+});
+
+app.post('/changePriceService', urlencodedParser, async function (req, res) {
+    const newPriceService = req.body.newPrice;
+    const typeChangePriceService = req.body.type;
+    const currentService = modelServices.getServiceByType(typeChangePriceService);
+
+    await dal.updateService(currentService._type, newPriceService);
+});
+
+app.get('/getRecordsDataFromDB', urlencodedParser, async (request, res) => {
+    const records = await dal.getAllRecords();
+
+    modelRecords._records = [];
+
+    for (let i = 0; i < records.length; i++) {
+        modelRecords.setRecord(new Record(records[i].firstName, records[i].lastName, records[i].email, records[i].dateTime, records[i].service, records[i].barber));
+    }
+
+    res.send(JSON.stringify(modelRecords.getRecords()));
+});
+
+app.post('/addRecords', urlencodedParser, async function (req, res) {
+    const {firstName, lastName, email, dateTime, service, barber} = req.body;
+
+    const newRecord = new Record(firstName, lastName, email, dateTime, service, barber);
+
+    modelRecords.setRecord(new Record(firstName, lastName, email, dateTime, service, barber));
+
+    await dal.setRecord(new Record(firstName, lastName, email, dateTime, service, barber));
+
+    res.send(JSON.stringify(newRecord));
+});
+
+app.post('/sendEmail', urlencodedParser, async function (req, res) {
+    const { firstName, email, date, time, service, sendBarber } = req.body;
+
+    const sendText = `Добрый день, ${firstName}! Вы записаны на услугу ${service}, ${date} числа на ${time}. Ваш барбер ${sendBarber}.`;
+
+    sendToUsersEmail(email, firstName, sendText);
+});
+
+app.get('/getStoreDataFromDB', urlencodedParser, async function (req, res) {
+    const store = await dal.getAllStore();
+
+    modelStore._store = [];
+
+    for (let i = 0; i < store.length; i++) {
+        modelStore.setStoreItem(new StoreItem(store[i].type, store[i].price, store[i].mark));
+    }
+
+    res.send(JSON.stringify(modelStore.getStore()));
+});
+
+app.post('/configAddStoreItem', urlencodedParser, async function (req, res) {
+    const { type, price, mark } = req.body;
+
+    const newStoreItem = new StoreItem(type, price, mark);
+
+    if (storeValidator.isAdded(newStoreItem._type)) {
+        res.send("bad_reg");
+    } else {
+        modelStore.setStoreItem(newStoreItem);
+        await dal.setStoreItem(newStoreItem);
+
+        res.send(JSON.stringify(newStoreItem));
+    }
+});
+
+app.post('/changePriceStoreItem', urlencodedParser, async function (req, res) {
+    const newPriceStoreItem = req.body.newPrice;
+    const typeChangePriceStoreItem = req.body.type;
+    const currentService = modelStore.getStoreByType(typeChangePriceStoreItem);
+
+    await dal.updateStoreItem(currentService._type, newPriceStoreItem);
+});
+
+app.post('/deleteStoreItemByType', urlencodedParser, async function (req, res) {
+    const typeStoreItem = req.body.type;
+
+    await dal.deleteStoreItem(typeStoreItem);
 });
