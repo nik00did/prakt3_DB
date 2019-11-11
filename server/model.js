@@ -39,7 +39,7 @@ Services.prototype.deleteService = function (id) {
     this._services.filter(service => service._id !== id);
 };
 //barbers
-function Barber(firstName, lastName, email, age, experience, salary, rating) {
+function Barber(firstName, lastName, email, age, experience, salary, rating, fired) {
     this._firstName = firstName;
     this._lastName = lastName;
     this._email = email;
@@ -47,6 +47,7 @@ function Barber(firstName, lastName, email, age, experience, salary, rating) {
     this._experience = experience;
     this._salary = salary;
     this._rating = rating;
+    this._fired = fired;
 }
 
 function Barbers() {
@@ -106,7 +107,20 @@ Users.prototype.setUser = function (user) {
 };
 
 Users.prototype.deleteUser = function (email) {
-    this._users.filter(user => user.email !== email);
+    return this._users.filter(user => user.email !== email);
+};
+
+Users.prototype.getUserByEmail= function (email) {
+    let user = null;
+
+    for (let i = 0; i < this._users.length; i++) {
+        if (String(this._users[i]._email) === String(email)) {
+            user = this._users[i];
+            break;
+        }
+    }
+
+    return user;
 };
 
 function Record(firstName, lastName, email, dateTime, service, barber) {

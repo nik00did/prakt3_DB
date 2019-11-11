@@ -62,8 +62,11 @@ UsersDaoMongoDB.prototype.setUser = async function (object) {
     });
 };
 
-UsersDaoMongoDB.prototype.deleteUser = async function (id) {
-    await this._model.remove({_id: id});
+UsersDaoMongoDB.prototype.updateUser = async function (email, type) {
+    await this._model.findOne({email}, (err, doc) => {
+        doc.userType = type;
+        doc.save();
+    });
 };
 
 module.exports = UsersDaoMongoDB;

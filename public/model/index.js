@@ -39,7 +39,7 @@ Services.prototype.deleteService = function (id) {
     this._services.filter(service => service._id !== id);
 };
 //barbers
-function Barber(firstName, lastName, email, age, experience, salary, rating) {
+function Barber(firstName, lastName, email, age, experience, salary, rating, fired) {
     this._firstName = firstName;
     this._lastName = lastName;
     this._email = email;
@@ -47,6 +47,7 @@ function Barber(firstName, lastName, email, age, experience, salary, rating) {
     this._experience = experience;
     this._salary = salary;
     this._rating = rating;
+    this._fired = fired;
 }
 
 function Barbers() {
@@ -99,6 +100,19 @@ function Users() {
 
 Users.prototype.getUsers = function () {
     return this._users;
+};
+
+Users.prototype.getUserByEmail= function (email) {
+    let user = null;
+
+    for (let i = 0; i < this._users.length; i++) {
+        if (String(this._users[i]._email) === String(email)) {
+            user = this._users[i];
+            break;
+        }
+    }
+
+    return user;
 };
 
 Users.prototype.setUser = function (user) {

@@ -49,6 +49,10 @@ Dal.prototype.deleteBarber = async function (email) {
     await this._barbersDal.deleteBarber(email);
 };
 
+Dal.prototype.setFiredBarber = async function (email, date) {
+    await this._barbersDal.setFiredBarber(email, date);
+};
+
 Dal.prototype.getAllServices = async function () {
     return await this._servicesDal.getAllServices();
 };
@@ -81,6 +85,10 @@ Dal.prototype.setUser = async function (object) {
     await this._usersDal.setUser(object);
 };
 
+Dal.prototype.updateUser = async function (email, type) {
+    await this._usersDal.updateUser(email, type);
+};
+
 Dal.prototype.getAllRecords = async function () {
     return await this._recordsDal.getAllRecords();
 };
@@ -91,6 +99,14 @@ Dal.prototype.getRecordByDateTime = async function (dateTime) {
 
 Dal.prototype.setRecord = async function (object) {
     await this._recordsDal.setRecord(object);
+};
+
+Dal.prototype.deleteRecord = async function (dateTime) {
+    await this._recordsDal.deleteRecord(dateTime);
+};
+
+Dal.prototype.deleteRecordByService = async function (service) {
+    await this._recordsDal.deleteRecordByService(service);
 };
 
 Dal.prototype.getAllStore = async function () {

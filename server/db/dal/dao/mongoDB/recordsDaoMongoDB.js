@@ -60,15 +60,12 @@ RecordsDaoMongoDB.prototype.getRecordByDateTime = async function (dateTime) {
     return await this._model.findOne({dateTime});
 };
 
-// OrdersDaoMongoDB.prototype.updateOrder = async function (dateTime, ) {
-//     await this._model.findOne({type}, (err, doc) => {
-//         doc.price = newPrice;
-//         doc.save();
-//     });
-// };
-
 RecordsDaoMongoDB.prototype.deleteRecord = async function (dateTime) {
     await this._model.remove({dateTime});
+};
+
+RecordsDaoMongoDB.prototype.deleteRecordByService = async function (service) {
+    await this._model.remove({service});
 };
 
 module.exports = RecordsDaoMongoDB;

@@ -7,14 +7,28 @@ function drawHomeContent(person) {
     h1.setAttribute('class', 'main__title');
     h1.textContent = `${!person ? 'Добро пожаловать!' :
         person._userType === 'user' ? 'Добро пожаловать, ' + person._firstName.toUpperCase() + '!' :
+            person._userType === 'blackList' ? 'Ваш аккаунт временно находится в черном списке. Напишите на почту администратора чтоб узнать причину.' :
             'Администратор'}`;
+
+    if (person && person._userType === 'blackList') {
+        h1.setAttribute('style', 'color: red');
+    } else {
+        h1.removeAttribute('style');
+    }
 
     main.append(h1);
 
-    if (!person || person._userType !== 'admin') {
+    if (!person || person._userType === 'user') {
         const buttonRecord = document.createElement('button');
         buttonRecord.setAttribute('id', 'recording');
         buttonRecord.textContent = 'Записаться';
+
+        main.append(buttonRecord);
+    } else if (person._userType === 'blackList') {
+        const buttonRecord = document.createElement('button');
+        buttonRecord.setAttribute('id', 'recording');
+        buttonRecord.setAttribute('onclick', `openModalForSendEmailAdmin('${person._email}')`);
+        buttonRecord.textContent = 'Написать';
 
         main.append(buttonRecord);
     }
@@ -36,6 +50,64 @@ function drawHomeContent(person) {
     buttonScroll.innerHTML = '&#8595';
 
     main.append(buttonScroll);
+
+    if (person && person._userType === 'blackList') {
+        let modalDiv = document.createElement('div');
+        modalDiv.setAttribute('class', 'modal__back');
+        modalDiv.setAttribute('id', 'modal__back_sendEmailToAdmin');
+
+        let window = document.createElement('div');
+        window.setAttribute('class', 'modal__window_sendEmailToAdmin');
+
+        let formContent = document.createElement('div');
+        formContent.setAttribute('class', 'form_content');
+
+        let inputEmail = document.createElement('input');
+        inputEmail.setAttribute('placeholder', 'Your email');
+        inputEmail.setAttribute('value', person._email);
+        inputEmail.setAttribute('id', 'inputEmail');
+        inputEmail.setAttribute('class', 'inputSendEmail');
+
+        formContent.append(inputEmail);
+
+        let textArea = document.createElement('textarea');
+        textArea.setAttribute('placeholder', 'Your message');
+        textArea.setAttribute('rows', '10');
+        textArea.setAttribute('id', 'textArea');
+
+        formContent.append(textArea);
+
+        window.append(formContent);
+
+        let divButtons = document.createElement('div');
+        divButtons.setAttribute('class', 'formDivButtons');
+
+        let buttonLogIn = document.createElement('button');
+        buttonLogIn.setAttribute('id', 'cancelSendEmailToAdmin');
+        buttonLogIn.setAttribute('class', 'form__item_button-modal');
+        buttonLogIn.setAttribute('type', 'button');
+        buttonLogIn.textContent = 'Отмена';
+
+        divButtons.append(buttonLogIn);
+
+        let buttonSignUp = document.createElement('button');
+        buttonSignUp.setAttribute('id', 'confirmSendEmailToAdmin');
+        buttonSignUp.setAttribute('class', 'form__item_button-modal');
+        buttonSignUp.setAttribute('type', 'button');
+        buttonSignUp.textContent = 'Отправить';
+
+        divButtons.append(buttonSignUp);
+
+        window.append(divButtons);
+
+        modalDiv.append(window);
+
+        main.append(modalDiv);
+    }
+}
+
+function openModalForSendEmailAdmin(email) {
+    document.getElementById('modal__back_sendEmailToAdmin').setAttribute('style', 'visibility: visible')
 }
 
 function drawScrollDown() {
@@ -355,27 +427,47 @@ function drawScrollDown() {
     main.append(div);
 }
 
-function addTableRow(number, firstName, lastName, age, experience) {
-    const tbody = document.getElementById('tbody');
+function drawUser(number, user) {
+    const container = document.getElementById('main__section');
 
-    const tr = document.createElement('tr');
-    tr.setAttribute('class','table__row');
+    const section = document.createElement('section');
+    section.setAttribute('class', 'section__user');
 
-    let td = null, p = null;
+    let div = document.createElement('div');
+    div.setAttribute('class', 'section__service_item');
 
-    for (let i = 0; i < arguments.length; i++) {
-        td = document.createElement('td');
-        td.setAttribute('class','table__cell');
+    const { _firstName, _lastName, _email, _date } = user;
+    const array = [number, _firstName, _lastName, _email, _date];
 
-        p = document.createElement('p');
-        p.textContent = arguments[i];
+    let item;
 
-        td.append(p);
+    for (let i = 0; i < array.length; i++) {
+        item = document.createElement('div');
 
-        tr.append(td);
+        if (i === 0) {
+            item.setAttribute('class', 'section__store_item-cell_number');
+        } else if (i === 3 || i === 4) {
+            item.setAttribute('class', 'section__barber_item-cell_email');
+        } else {
+            item.setAttribute('class', 'section__barber_item-cell_name');
+        }
+
+        item.textContent = array[i];
+
+        div.append(item);
     }
 
-    tbody.append(tr)
+    section.append(div);
+
+    const button = document.createElement('button');
+    button.setAttribute('class', 'removeService');
+    button.setAttribute('id', `removeUser${user._email}`);
+    button.setAttribute('onclick', `clickDeleteUser('${user._email}')`);
+    button.textContent = user._userType === 'user' ? 'В черный список' : 'Вернуть';
+
+    section.append(button);
+
+    container.append(section);
 }
 
 function getNumberOfImage(email, array) {
@@ -976,6 +1068,8 @@ function drawServicesInfo() {
 }
 
 function drawPublicServices(serviceList, currentUser, object) {
+    document.getElementById('servicesDiv').innerHTML = '';
+
     const div = document.getElementById('servicesDiv');
 
     const tempDivForItemServices = document.createElement('div');
@@ -2576,7 +2670,7 @@ function drawBarber(number, barber) {
     let div = document.createElement('div');
     div.setAttribute('class', 'section__barber_item');
 
-    const {_firstName, _lastName, _email, _age, _experience, _salary, _rating} = barber;
+    const {_firstName, _lastName, _email, _age, _experience, _salary, _rating, _fired } = barber;
     const array = [number, _firstName, _lastName, _email, _age, _experience, _salary, _rating];
 
     let item;
@@ -2592,7 +2686,7 @@ function drawBarber(number, barber) {
             item.setAttribute('class', 'section__barber_item-cell_number');
         }
 
-        if (i === 6) {
+        if (i === 6 && _fired === '-') {
             item.setAttribute('onmouseover', `showButtonMouseOverSalary('${number}', '${_email}')`);
             item.setAttribute('onmouseout', `hideButtonMouseOverSalary('${number}', '${_salary}', '${_email}')`);
         }
@@ -2604,13 +2698,22 @@ function drawBarber(number, barber) {
 
     section.append(div);
 
-    const button = document.createElement('button');
-    button.setAttribute('class', 'removeBarber');
-    button.setAttribute('id', `removeBarber${barber._email}`);
-    button.setAttribute('onclick', `clickDeleteBarber('${barber._email}')`);
-    button.textContent = 'Уволить';
+    if (_fired === '-') {
+        const button = document.createElement('button');
+        button.setAttribute('class', 'removeBarber');
+        button.setAttribute('id', `removeBarber${barber._email}`);
+        button.setAttribute('onclick', `clickDeleteBarber('${barber._email}')`);
+        button.textContent = 'Уволить';
 
-    section.append(button);
+        section.append(button);
+    } else {
+        const div = document.createElement('div');
+        div.setAttribute('class', 'removedBarber');
+        div.textContent = 'Уволeн';
+        div.setAttribute('title', _fired);
+
+        section.append(div);
+    }
 
     container.append(section);
 }
@@ -2901,69 +3004,252 @@ function drawBarbersInfo() {
 }
 
 function drawBlackListUsers() {
-}
-
-function drawSignedUpUsersContent() {
     document.getElementById('main').innerHTML = '';
 
     const main = document.getElementById('main');
 
     const div = document.createElement('div');
-    div.setAttribute('class', 'main__sections');
+    div.setAttribute('class', 'main__sections adminData');
 
     const divTitle = document.createElement('h1');
     divTitle.setAttribute('class', 'service__title');
-    divTitle.textContent = 'Зарегистрированые пользователи';
+    divTitle.textContent = 'Черный список пользователей';
 
     div.append(divTitle);
 
-    const table = document.createElement('table');
-    table.setAttribute('class','table');
+    const sectionContainer = document.createElement('div');
+    sectionContainer.setAttribute('class', 'section__container');
+    sectionContainer.setAttribute('id', 'main__section');
 
-    const thead = document.createElement('thead');
+    const headerSection = document.createElement('section');
+    headerSection.setAttribute('class', 'section__main');
 
-    const mainTr = document.createElement('tr');
-    mainTr.setAttribute('style','height: 50px;');
-    mainTr.setAttribute('class', 'table__row_main');
+    let headerSectionItem = document.createElement('div');
+    headerSectionItem.setAttribute('class', 'section__barber_item');
 
-    let th = null, p = null;
-    const array = ['№', 'Имя', 'Фамилия', 'Дата рождения','Почта'];
+    const array = ['№', 'Имя', 'Фамилия', 'Почта', 'Дата рождения'];
+
+    let item;
 
     for (let i = 0; i < array.length; i++) {
-        th = document.createElement('th');
-        th.setAttribute('class', 'table__cell');
+        item = document.createElement('div');
 
-        p = document.createElement('p');
-        p.textContent = array[i];
+        if (array[i] === '№') {
+            item.setAttribute('class', 'section__store_item-cell_number');
+        } else if (array[i] === 'Почта' || array[i] === 'Дата рождения') {
+            item.setAttribute('class', 'section__barber_item-cell_email');
+        } else {
+            item.setAttribute('class', 'section__barber_item-cell_name');
+        }
 
-        th.append(p);
+        item.textContent = array[i];
 
-        mainTr.append(th);
+        headerSectionItem.append(item);
     }
 
-    thead.append(mainTr);
+    headerSection.append(headerSectionItem);
 
-    table.append(thead);
+    sectionContainer.append(headerSection);
 
-    const tbody = document.createElement('tbody');
-    tbody.setAttribute('id','tbody');
-
-    table.append(tbody);
-
-    div.append(table);
+    div.append(sectionContainer);
 
     main.append(div);
+
+    let modalDiv = document.createElement('div');
+    modalDiv.setAttribute('class', 'modal__back');
+    modalDiv.setAttribute('id', 'modal__back_confirmDeleteUser');
+
+    let window = document.createElement('div');
+    window.setAttribute('class', 'modal__window_delete');
+
+    let headerModalWindow = document.createElement('h1');
+    headerModalWindow.textContent = 'Вы уверены что хотите убрать этого пользователя из черного списка?';
+
+    window.append(headerModalWindow);
+
+    let formContent = document.createElement('div');
+    formContent.setAttribute('class', 'form_content');
+
+    let span,formItem;
+
+    let arrayTextContent = ['Имя', 'Фамилия', 'Почта', 'Дата рождения'];
+    let arrayValues = ['firstNameDeleteUser', 'lastNameDeleteUser', 'emailDeleteUser', 'dateDeleteUser'];
+
+    for (let i = 0; i < arrayTextContent.length; i++) {
+        formItem = document.createElement('div');
+        formItem.setAttribute('class', 'form__item');
+
+        span = document.createElement('span');
+        span.textContent = arrayTextContent[i];
+
+        formItem.append(span);
+
+        span = document.createElement('span');
+        span.setAttribute('id', arrayValues[i]);
+
+        formItem.append(span);
+
+        formContent.append(formItem);
+    }
+
+    window.append(formContent);
+
+    let divButtons = document.createElement('div');
+    divButtons.setAttribute('class', 'formDivButtons');
+
+    let buttonLogIn = document.createElement('button');
+    buttonLogIn.setAttribute('id', 'cancelDeleteUser');
+    buttonLogIn.setAttribute('class', 'form__item_button-modal');
+    buttonLogIn.setAttribute('type', 'button');
+    buttonLogIn.textContent = 'Нет';
+
+    divButtons.append(buttonLogIn);
+
+    let buttonSignUp = document.createElement('button');
+    buttonSignUp.setAttribute('id', 'confirmDeleteUser');
+    buttonSignUp.setAttribute('class', 'form__item_button-modal');
+    buttonSignUp.setAttribute('type', 'button');
+    buttonSignUp.textContent = 'Да';
+
+    divButtons.append(buttonSignUp);
+
+    window.append(divButtons);
+
+    modalDiv.append(window);
+
+    main.append(modalDiv);
 }
 
-function drawUserPage() {
+function drawUsersInfo() {
+    document.getElementById('main').innerHTML = '';
+
+    const main = document.getElementById('main');
+
+    const div = document.createElement('div');
+    div.setAttribute('class', 'main__sections adminData');
+
+    const divTitle = document.createElement('h1');
+    divTitle.setAttribute('class', 'service__title');
+    divTitle.textContent = 'Информация о пользователях';
+
+    div.append(divTitle);
+
+    const sectionContainer = document.createElement('div');
+    sectionContainer.setAttribute('class', 'section__container');
+    sectionContainer.setAttribute('id', 'main__section');
+
+    const headerSection = document.createElement('section');
+    headerSection.setAttribute('class', 'section__main');
+
+    let headerSectionItem = document.createElement('div');
+    headerSectionItem.setAttribute('class', 'section__barber_item');
+
+    const array = ['№', 'Имя', 'Фамилия', 'Почта', 'Дата рождения'];
+
+    let item;
+
+    for (let i = 0; i < array.length; i++) {
+        item = document.createElement('div');
+
+        if (array[i] === '№') {
+            item.setAttribute('class', 'section__store_item-cell_number');
+        } else if (array[i] === 'Почта' || array[i] === 'Дата рождения') {
+            item.setAttribute('class', 'section__barber_item-cell_email');
+        } else {
+            item.setAttribute('class', 'section__barber_item-cell_name');
+        }
+
+        item.textContent = array[i];
+
+        headerSectionItem.append(item);
+    }
+
+    headerSection.append(headerSectionItem);
+
+    sectionContainer.append(headerSection);
+
+    div.append(sectionContainer);
+
+    main.append(div);
+
+    let modalDiv = document.createElement('div');
+    modalDiv.setAttribute('class', 'modal__back');
+    modalDiv.setAttribute('id', 'modal__back_confirmDeleteUser');
+
+    let window = document.createElement('div');
+    window.setAttribute('class', 'modal__window_delete');
+
+    let headerModalWindow = document.createElement('h1');
+    headerModalWindow.textContent = 'Вы уверены что хотите добавить этого пользователя в черный список?';
+
+    window.append(headerModalWindow);
+
+    let formContent = document.createElement('div');
+    formContent.setAttribute('class', 'form_content');
+
+    let span,formItem;
+
+    let arrayTextContent = ['Имя', 'Фамилия', 'Почта', 'Дата рождения'];
+    let arrayValues = ['firstNameDeleteUser', 'lastNameDeleteUser', 'emailDeleteUser', 'dateDeleteUser'];
+
+    for (let i = 0; i < arrayTextContent.length; i++) {
+        formItem = document.createElement('div');
+        formItem.setAttribute('class', 'form__item');
+
+        span = document.createElement('span');
+        span.textContent = arrayTextContent[i];
+
+        formItem.append(span);
+
+        span = document.createElement('span');
+        span.setAttribute('id', arrayValues[i]);
+
+        formItem.append(span);
+
+        formContent.append(formItem);
+    }
+
+    window.append(formContent);
+
+    let divButtons = document.createElement('div');
+    divButtons.setAttribute('class', 'formDivButtons');
+
+    let buttonLogIn = document.createElement('button');
+    buttonLogIn.setAttribute('id', 'cancelDeleteUser');
+    buttonLogIn.setAttribute('class', 'form__item_button-modal');
+    buttonLogIn.setAttribute('type', 'button');
+    buttonLogIn.textContent = 'Нет';
+
+    divButtons.append(buttonLogIn);
+
+    let buttonSignUp = document.createElement('button');
+    buttonSignUp.setAttribute('id', 'confirmDeleteUser');
+    buttonSignUp.setAttribute('class', 'form__item_button-modal');
+    buttonSignUp.setAttribute('type', 'button');
+    buttonSignUp.textContent = 'Да';
+
+    divButtons.append(buttonSignUp);
+
+    window.append(divButtons);
+
+    modalDiv.append(window);
+
+    main.append(modalDiv);
+}
+
+function drawUserPage(type) {
     const headerItems = document.getElementById('headerItems');
 
-    const item = document.createElement('button');
-    item.setAttribute('id', 'mine');
-    item.setAttribute('class', 'header__item');
-    item.textContent = 'Мое';
+    let item;
 
-    headerItems.append(item);
+    if (!type) {
+        item = document.createElement('button');
+        item.setAttribute('id', 'mine');
+        item.setAttribute('class', 'header__item');
+        item.textContent = 'Мое';
+
+        headerItems.append(item);
+    }
 
     const headerFunc = document.getElementById('headerFunc');
 
@@ -3055,4 +3341,72 @@ function clearCurrentHeaderFunc() {
     for (let i = 0; i < headerItems.length; i++) {
         headerItems[i].classList.remove('currentHeaderItem');
     }
+}
+
+function drawAboutContent() {
+    document.getElementById('main').innerHTML = '';
+
+    const main = document.getElementById('main');
+
+    const mainDiv = document.createElement('div');
+    mainDiv.setAttribute('class', 'main__sections');
+
+    const headerText = document.createElement('h1');
+    headerText.setAttribute('class', 'service__title');
+    headerText.textContent = 'О нас';
+
+    mainDiv.append(headerText);
+
+    const map = document.createElement('div');
+    map.setAttribute('style', 'overflow:hidden;width: 800px;position: relative;');
+
+    const iframe = document.createElement('iframe');
+    iframe.setAttribute('width', '800');
+    iframe.setAttribute('height', '440');
+    iframe.setAttribute('src', 'https://maps.google.com/maps?width=800&amp;height=440&amp;hl=en&amp;q=%D0%94%D0%BD%D0%B5%D0%BF%D1%80%2C%20%D0%A3%D0%BA%D1%80%D0%B0%D0%B8%D0%BD%D0%B0+(%D0%9D%D0%B0%D0%B7%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5)&amp;ie=UTF8&amp;t=&amp;z=16&amp;iwloc=B&amp;output=embed');
+    iframe.setAttribute('frameborder', '0');
+    iframe.setAttribute('scrolling', 'no');
+    iframe.setAttribute('marginheight', '0');
+    iframe.setAttribute('marginwidth', '0');
+
+    map.append(iframe);
+
+    const div = document.createElement('div');
+    div.setAttribute('style', 'position: absolute;width: 80%;bottom: 10px;left: 0;right: 0;margin-left: auto;margin-right: auto;color: #000;text-align: center;');
+
+    const small = document.createElement('small');
+    small.setAttribute('style', 'line-height: 1.8;font-size: 2px;background: #fff;');
+
+    const a1 = document.createElement('a');
+    a1.setAttribute('href', 'https://embedgooglemaps.com/en/');
+    a1.textContent = 'https://embedgooglemaps.com/en/';
+
+    const a2 = document.createElement('a');
+    a2.setAttribute('href', 'https://iamsterdamcard.it');
+    a2.textContent = 'iamsterdamcard.it';
+
+    small.innerHTML = `Powered by ${a1}&${a2}`;
+
+    div.append(small);
+
+    map.append(div);
+
+    const style = document.createElement('style');
+    style.innerHTML = '#gmap_canvas img{max-width:none!important;background:none!important}';
+
+    map.append(style);
+    
+    mainDiv.append(map);
+
+    main.append(mainDiv);
+    // <div style="overflow:hidden;width: 800px;position: relative;">
+    //     <iframe width="800" height="440" src="" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
+    //     <div style="">
+    //         <small style="">Powered by
+    //             <a href="https://embedgooglemaps.com/en/">https://embedgooglemaps.com/en/</a> &
+    //             // <a href="https://iamsterdamcard.it">iamsterdamcard.it</a>
+    // //      </small>
+    // //  </div>
+    // //  <style>#gmap_canvas img{max-width:none!important;background:none!important}</style>
+    // </div><br />
 }

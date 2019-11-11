@@ -7,7 +7,7 @@ const urlencodedParser = bodyParse.json();
 const {Model, User, Barber, Service, Record, StoreItem} = require('./model');
 const email = require("../node_modules/emailjs/email");
 
-const sendToUsersEmail = (userEmail, userName, sendText, image) => {
+const sendToUsersEmail = (userEmail, userName, sendText, titleMessage) => {
     const server = email.server.connect({
         host: "smtp.gmail.com",
         ssl: true,
@@ -20,7 +20,7 @@ const sendToUsersEmail = (userEmail, userName, sendText, image) => {
         from: 'nik.hairstyle2019',
         to: `${userName} ${userEmail}`,
         cc: "",
-        subject: "Вы записаны!",
+        subject: titleMessage,
     }, function (err, message) {
         console.log(err || message);
     });
@@ -37,6 +37,7 @@ const modelBarbers = new Model()._barbers;
 const modelServices = new Model()._services;
 const modelRecords = new Model()._records;
 const modelStore = new Model()._store;
+const modelBlackListUsers = new Model()._users;
 
 const validator = new Validator(modelUsers._users);
 const barbersValidator = new Validator(modelBarbers._barbers);
@@ -87,13 +88,25 @@ app.post('/signUp', urlencodedParser, async function (req, res) {
 app.get('/getUsersDataFromDB', urlencodedParser, async (request, res) => {
     const users = await dal.getAllUsers();
 
-    if(modelUsers.getUsers().length !== users.length) {
-        for (let i = 0; i < users.length; i++) {
-            modelUsers.setUser(new User(users[i].firstName, users[i].lastName, users[i].date, users[i].email, users[i].password, users[i].userType));
-        }
+    modelUsers._users = [];
+
+    for (let i = 0; i < users.length; i++) {
+        modelUsers.setUser(new User(users[i].firstName, users[i].lastName, users[i].date, users[i].email, users[i].password, users[i].userType));
     }
 
     res.send(JSON.stringify(modelUsers.getUsers()));
+});
+
+app.post('/setBlackUser', urlencodedParser, async (request, res) => {
+    const email = request.body.email;
+
+    await dal.updateUser(email, 'blackList');
+});
+
+app.post('/setUser', urlencodedParser, async (request, res) => {
+    const email = request.body.email;
+
+    await dal.updateUser(email, 'user');
 });
 
 app.post('/configAddBarber', urlencodedParser, async function (req, res) {
@@ -104,7 +117,7 @@ app.post('/configAddBarber', urlencodedParser, async function (req, res) {
     let data = JSON.stringify(req.body);
     data = JSON.parse(data);
 
-    const newBarber = new Barber(data.firstName, data.lastName, data.email, data.age, data.experience, data.salary, data.rating);
+    const newBarber = new Barber(data.firstName, data.lastName, data.email, data.age, data.experience, data.salary, data.rating, data.fired);
 
     if (barbersValidator.isSignedUp(newBarber._email)) {
         res.send("bad_reg");
@@ -129,7 +142,7 @@ app.get('/getBarbersDataFromDB', urlencodedParser, async (request, res) => {
     modelBarbers._barbers = [];
 
     for (let i = 0; i < barbers.length; i++) {
-        modelBarbers.setBarber(new Barber(barbers[i].firstName, barbers[i].lastName, barbers[i].email, barbers[i].age, barbers[i].experience, barbers[i].salary, barbers[i].rating));
+        modelBarbers.setBarber(new Barber(barbers[i].firstName, barbers[i].lastName, barbers[i].email, barbers[i].age, barbers[i].experience, barbers[i].salary, barbers[i].rating, barbers[i].fired));
     }
 
     res.send(JSON.stringify(modelBarbers.getBarbers()));
@@ -141,6 +154,12 @@ app.post('/changeSalaryBarber', urlencodedParser, async function (req, res) {
     const currentBarber = modelBarbers.getBarberByEmail(emailChangeSalaryBarber);
 
     await dal.updateBarber(currentBarber._email, newSalaryBarber);
+});
+
+app.post('/setFiredBarber', urlencodedParser, async function (req, res) {
+    const data = req.body;
+
+    await dal.setFiredBarber(data.email, data.fired);
 });
 
 app.get('/getServicesDataFromDB', urlencodedParser, async (request, res) => {
@@ -214,12 +233,30 @@ app.post('/addRecords', urlencodedParser, async function (req, res) {
     res.send(JSON.stringify(newRecord));
 });
 
+app.post('/deleteRecordByDateTime', urlencodedParser, async function (req, res) {
+    const dateTime = req.body.dateTime;
+    const serviceType = req.body.service;
+    const records = modelRecords.getRecords();
+
+
+    for (let i = 0; i < records.length; i++) {
+        if (records[i]._dateTime.slice(0, 10) !== dateTime && records[i]._service === serviceType) {
+            let sendText = `Доброго времени суток, ${records[i]._firstName}! Приносим свои извенения, но выбранная вами услуга "${serviceType}" была удалена из списка по решению руководства. Вы можете выбрать стрижку которая вам нужна из отставшихся в нашем списке!`;
+            let titleMessage = 'Запись отменена!';
+
+            sendToUsersEmail(records[i]._email, records[i]._firstName, sendText, titleMessage);
+
+            await dal.deleteRecordByService(serviceType);
+        }
+    }
+});
+
 app.post('/sendEmail', urlencodedParser, async function (req, res) {
     const { firstName, email, date, time, service, sendBarber } = req.body;
 
     const sendText = `Добрый день, ${firstName}! Вы записаны на услугу ${service}, ${date} числа на ${time}. Ваш барбер ${sendBarber}.`;
 
-    sendToUsersEmail(email, firstName, sendText);
+    sendToUsersEmail(email, firstName, sendText, 'Вы записаны!');
 });
 
 app.get('/getStoreDataFromDB', urlencodedParser, async function (req, res) {
@@ -261,4 +298,10 @@ app.post('/deleteStoreItemByType', urlencodedParser, async function (req, res) {
     const typeStoreItem = req.body.type;
 
     await dal.deleteStoreItem(typeStoreItem);
+});
+
+app.post('/sendEmailToAdmin', urlencodedParser, async function (req, res) {
+    const { email, text } = req.body;
+
+    sendToUsersEmail(email, '', text, 'Письмо от пользователя из черного списка.');
 });

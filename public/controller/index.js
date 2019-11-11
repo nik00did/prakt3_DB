@@ -39,8 +39,10 @@ Controller.prototype.init = async () => {
     this._barbersModel = new Model()._barbers;
 
     for (let i = 0; i < barbers.length; i++) {
-        barber = new Barber(barbers[i]._firstName, barbers[i]._lastName, barbers[i]._email, barbers[i]._age, barbers[i]._experience, barbers[i]._salary, barbers[i]._rating);
-        this._barbersModel.setBarber(barber);
+        if (barbers[i]._fired === '-') {
+            barber = new Barber(barbers[i]._firstName, barbers[i]._lastName, barbers[i]._email, barbers[i]._age, barbers[i]._experience, barbers[i]._salary, barbers[i]._rating, barbers[i]._fired);
+            this._barbersModel.setBarber(barber);
+        }
     }
 
     let services = await sendAjaxRequest('/getServicesDataFromDB');
@@ -86,6 +88,7 @@ Controller.prototype.init = async () => {
     this._view._record.onclick = clickRecord;
     this._view._scrollDown.onclick = clickScrollDown;
     this._view._recording.onclick = clickRecord;
+    this._view._about.onclick = clickAbout;
 };
 
 const clickHome = () => {
@@ -100,6 +103,14 @@ const clickHome = () => {
     if (!this._currentUser || this._currentUser._userType !== 'admin') {
         this._view._recording.onclick = clickRecord;
     }
+};
+
+const clickAbout = () => {
+    drawAboutContent();
+
+    clearCurrentHeaderFunc();
+    clearCurrentHeaderItem();
+    document.getElementById('about').classList.add('currentHeaderItem');
 };
 
 const clickServices = async () => {
@@ -160,8 +171,10 @@ const clickBarbers = async () => {
     this._barbersModel = new Model()._barbers;
 
     for (let i = 0; i < barbers.length; i++) {
-        barber = new Barber(barbers[i]._firstName, barbers[i]._lastName, barbers[i]._email, barbers[i]._age, barbers[i]._experience, barbers[i]._salary, barbers[i]._rating);
-        this._barbersModel.setBarber(barber);
+        if (barbers[i]._fired === '-') {
+            barber = new Barber(barbers[i]._firstName, barbers[i]._lastName, barbers[i]._email, barbers[i]._age, barbers[i]._experience, barbers[i]._salary, barbers[i]._rating, barbers[i]._fired);
+            this._barbersModel.setBarber(barber);
+        }
     }
 
     drawBarbersContent();
@@ -369,6 +382,7 @@ const clickLogOut = () => {
     this._view._record.onclick = clickRecord;
     this._view._scrollDown.onclick = clickScrollDown;
     this._view._recording.onclick = clickRecord;
+    this,_view._about.onclick = clickAbout;
 };
 
 const clickSubmitLogIn = () => {
@@ -395,6 +409,8 @@ const clickSubmitLogIn = () => {
             const users = this._usersModel.getUsers();
             let userType;
 
+            console.log(users);
+
             for (let i = 0; i < users.length; i++) {
                 if (users[i]._email === data.email) {
                     userType = users[i]._userType;
@@ -410,19 +426,43 @@ const clickSubmitLogIn = () => {
 
                     this._view._adminData = document.getElementById('data');
                     this._view._adminData.onclick = clickAdminData;
+                    this._view.getAllIdMenu();
+
+                    this._view._scrollDown.onclick = clickScrollDown;
+
                     break;
                 case 'user':
                     drawUserPage();
                     drawHomeContent(this._currentUser);
                     document.getElementById('home').classList.add('currentHeaderItem');
                     this._view._recording.onclick = clickRecord;
+                    this._view.getAllIdMenu();
+
+                    this._view._scrollDown.onclick = clickScrollDown;
+
+                    break;
+                case 'blackList':
+                    drawUserPage('blackList');
+                    drawHomeContent(this._currentUser);
+                    document.getElementById('home').classList.add('currentHeaderItem');
+
+                    this._view._home.onclick = null;
+                    this._view._service.onclick = null;
+                    this._view._barbers.onclick = null;
+                    this._view._store.onclick = null;
+                    this._view._logIn.onclick = null;
+                    this._view._record.onclick = null;
+                    this._view._scrollDown.onclick = null;
+                    this._view._recording.onclick = null;
+                    this._view._canselSendAdminEmail = document.getElementById('cancelSendEmailToAdmin');
+                    this._view._canselSendAdminEmail.onclick = cancelSendAdminEmail;
+                    this._view._confirmSendAdminEmail = document.getElementById('confirmSendEmailToAdmin');
+                    this._view._confirmSendAdminEmail.onclick = confirmSendAdminEmail;
                     break;
             }
 
-            this._view.getAllIdMenu();
             this._view._logOut = document.getElementById('logOut');
             this._view._logOut.onclick = clickLogOut;
-            this._view._scrollDown.onclick = clickScrollDown;
         } else {
             alert('Not found email!');
         }
@@ -431,7 +471,34 @@ const clickSubmitLogIn = () => {
     }
 };
 
-const clickAdminData = () => {
+const confirmSendAdminEmail = () => {
+    const email = document.getElementById('inputEmail').value;
+    const text = document.getElementById('textArea').value;
+
+    const data = { email, text };
+
+    this._sendData.postRequest('/sendEmailToAdmin', data, () => {});
+
+    cancelDeleteBarber();
+};
+
+const cancelSendAdminEmail = () => {
+    document.getElementById('modal__back_sendEmailToAdmin').setAttribute('style', 'visibility: hidden');
+};
+
+const clickAdminData = async () => {
+    let barbers = await sendAjaxRequest('/getBarbersDataFromDB');
+    let barber = null;
+
+    for (let i = 0; i < barbers.length; i++) {
+        barber = new Barber(barbers[i]._firstName, barbers[i]._lastName, barbers[i]._email, barbers[i]._age, barbers[i]._experience, barbers[i]._salary, barbers[i]._rating, barbers[i]._fired);
+
+        if (barber._fired !== '-' && new Date().getDate() - Number(barber._fired.split('.')[0]) >= 7) {
+            this._sendData.postRequest('/deleteBarberByEmail', {email: barber._email,}, () => {
+            });
+        }
+    }
+
     drawAdminDataContent();
     clearCurrentHeaderItem();
     document.getElementById('data').classList.add('currentHeaderItem');
@@ -442,13 +509,15 @@ const clickAdminData = () => {
     this._view._watchServices = document.getElementById('watchServices');
     this._view._watchStore = document.getElementById('watchStore');
     this._view._watchRecords = document.getElementById('watchRecords');
+    this._view._watchBlackList = document.getElementById('watchBlackList');
 
     this._view._usersAdmin.onclick = clickUsersAdmin;
-    this._view._blackListUsers.onclick = clickBlackList;
+    this._view._blackListUsers.onclick = clickWatchBlackList;
     this._view._watchBarbers.onclick = clickWatchBarbers;
     this._view._watchServices.onclick = clickWatchServices;
     this._view._watchStore.onclick = clickWatchStore;
     this._view._watchRecords.onclick = clickWatchRecords;
+    this._view._watchBlackList = clickWatchBlackList;
 };
 
 const clickWatchRecords = async () => {
@@ -532,7 +601,8 @@ const clickDeleteStoreItem = type => {
 
 const confirmDeleteStoreItem = async () => {
     let type = this._storeModel.getStoreByType(this._view._currentServiceTypeforDelete)._type;
-    const data = {type};
+
+    let data = {type};
     let url = '/deleteStoreItemByType';
 
     this._sendData.postRequest(url, data, () => {
@@ -676,6 +746,16 @@ const clickDeleteService = type => {
 
 const confirmDeleteService = async () => {
     let type = this._servicesModel.getServiceByType(this._view._currentServiceTypeforDelete)._type;
+
+    let dateToday = `${new Date().getDate()}.${new Date().getMonth() + 1}.${new Date().getFullYear()}`;
+    let dataRec = {
+        dateTime: dateToday,
+        service: type,
+    };
+
+    this._sendData.postRequest('/deleteRecordByDateTime', dataRec, () => {
+    });
+
     const data = {type};
     let url = '/deleteServiceByType';
 
@@ -715,7 +795,7 @@ const clickDeleteBarber = email => {
     this._view._confirmDeleteBarber = document.getElementById('confirmDeleteBarber');
     this._view._cancelDeleteBarber = document.getElementById('cancelDeleteBarber');
 
-    this._view._confirmDeleteBarber.onclick = confirmDeleteBarber;
+    this._view._confirmDeleteBarber.onclick = setFiredBarber;
     this._view._cancelDeleteBarber.onclick = cancelDeleteBarber;
 };
 
@@ -723,10 +803,11 @@ const cancelDeleteBarber = () => {
     document.getElementById('modal__back_confirm').setAttribute('style', 'visibility: hidden');
 };
 
-const confirmDeleteBarber = async () => {
+const setFiredBarber = async () => {
     let email = this._barbersModel.getBarberByEmail(this._view._currentBarbersEmailForDelete)._email;
-    const data = {email};
-    let url = '/deleteBarberByEmail';
+    let fired = `${new Date().getDate()}.${new Date().getMonth() + 1}.${new Date().getFullYear()}`;
+    const data = {email, fired};
+    let url = 'setFiredBarber';
 
     this._sendData.postRequest(url, data, () => {
     });
@@ -734,13 +815,25 @@ const confirmDeleteBarber = async () => {
     await clickWatchBarbers();
 };
 
+// const confirmDeleteBarber = async () => {
+//     let email = this._barbersModel.getBarberByEmail(this._view._currentBarbersEmailForDelete)._email;
+//     const data = {email};
+//     let url = '/deleteBarberByEmail';
+//
+//     this._sendData.postRequest(url, data, () => {});
+//
+//     await clickWatchBarbers();
+// };
+
 const clickWatchBarbers = async () => {
+    console.log('clickWatchBarbers');
+
     let barbers = await sendAjaxRequest('/getBarbersDataFromDB');
     let barber = null;
     this._barbersModel = new Model()._barbers;
 
     for (let i = 0; i < barbers.length; i++) {
-        barber = new Barber(barbers[i]._firstName, barbers[i]._lastName, barbers[i]._email, barbers[i]._age, barbers[i]._experience, barbers[i]._salary, barbers[i]._rating);
+        barber = new Barber(barbers[i]._firstName, barbers[i]._lastName, barbers[i]._email, barbers[i]._age, barbers[i]._experience, barbers[i]._salary, barbers[i]._rating, barbers[i]._fired);
         this._barbersModel.setBarber(barber);
     }
 
@@ -777,17 +870,18 @@ const clickConfigAddBarber = () => {
         experience: this._view._experience.value,
         salary: this._view._salary.value,
         rating: this._view._rating.value,
+        fired: '-',
     };
 
     let url = '/configAddBarber';
 
-    if (this._barbersValidator.isValidSignUp(data.firstName, data.lastName, data.email, data.age, data.experience, data.salary, data.rating)) {
+    if (this._barbersValidator.isValidSignUp(data.firstName, data.lastName, data.email, data.age, data.experience, data.salary, data.rating, data.fired)) {
         if (!this._barbersValidator.isSignedUp(data.email)) {
             this._sendData.postRequest(url, data, rez => {
                 if (rez) {
                     let newAddedBarber = JSON.parse(rez);
 
-                    const newBarber = new User(newAddedBarber._firstName, newAddedBarber._lastName, newAddedBarber._email, newAddedBarber._age, newAddedBarber._experience, newAddedBarber._salary, newAddedBarber._rating);
+                    const newBarber = new Barber(newAddedBarber._firstName, newAddedBarber._lastName, newAddedBarber._email, newAddedBarber._age, newAddedBarber._experience, newAddedBarber._salary, newAddedBarber._rating, newAddedBarber._fired);
                     this._barbersModel.setBarber(newBarber);
                     this._barbersValidator = new Validator(this._barbersModel.getBarbers());
                 }
@@ -918,21 +1012,99 @@ const clickCancelChangeSalaryBarber = () => {
     document.getElementById('modal__back_changeSalary').setAttribute('style', 'visibility: hidden;')
 };
 
-const clickBlackList = () => {
-    drawBlackListUsers();
-    clearCurrentHeaderFunc();
-    alert('Clicked!');
+const clickDeleteUser = email => {
+    document.getElementById('modal__back_confirmDeleteUser').setAttribute('style', 'visibility: visible');
+
+    this._view._currentServiceTypeforDelete = email;
+
+    const user = this._usersModel.getUserByEmail(this._view._currentServiceTypeforDelete);
+    let tempSpan;
+    let arrayServicesValues = [
+        user._firstName,
+        user._lastName,
+        user._email,
+        user._date,
+    ];
+    const arrayValues = ['firstNameDeleteUser', 'lastNameDeleteUser', 'emailDeleteUser', 'dateDeleteUser'];
+
+    for (let i = 0; i < arrayValues.length; i++) {
+        tempSpan = document.getElementById(arrayValues[i]);
+        tempSpan.textContent = arrayServicesValues[i];
+    }
+
+    this._view._confirmDeleteService = document.getElementById('confirmDeleteUser');
+    this._view._cancelDeleteService = document.getElementById('cancelDeleteUser');
+
+    this._view._confirmDeleteService.onclick = confirmDeleteUser;
+    this._view._cancelDeleteService.onclick = cancelDeleteUser;
 };
 
-const clickUsersAdmin = () => {
-    drawSignedUpUsersContent();
-    clearCurrentHeaderFunc();
+const confirmDeleteUser = async () => {
+    let email = this._usersModel.getUserByEmail(this._view._currentServiceTypeforDelete)._email;
+    let tempUser = this._usersModel.getUserByEmail(this._view._currentServiceTypeforDelete);
+    let data = {email};
 
-    const users = this._usersModel.getUsers();
+    if (tempUser._userType === 'user') {
+        this._sendData.postRequest('/setBlackUser', data, () => {
+        });
+    } else if (tempUser._userType === 'blackList') {
+        this._sendData.postRequest('/setUser', data, () => {});
+    }
+
+    if (tempUser._userType === 'user') {
+        await clickUsersAdmin();
+    } else if (tempUser._userType === 'blackList') {
+        await clickWatchBlackList();
+    }
+};
+
+const clickWatchBlackList = async () => {
+    let users = await sendAjaxRequest('/getUsersDataFromDB');
+    console.log(users);
+    let user = null;
+    this._usersModel = new Model()._users;
 
     for (let i = 0; i < users.length; i++) {
+        user = new User(users[i]._firstName, users[i]._lastName, users[i]._date, users[i]._email, users[i]._password, users[i]._userType);
+        this._usersModel.setUser(user);
+    }
+
+    drawBlackListUsers();
+    clearCurrentHeaderFunc();
+
+    users = this._usersModel.getUsers();
+
+    for (let i = 0, j = 1; i < users.length; i++) {
+        if (users[i]._userType === 'blackList') {
+            drawUser(j, users[i]);
+            j++;
+        }
+    }
+};
+
+const cancelDeleteUser = () => {
+    document.getElementById('modal__back_confirmDeleteUser').setAttribute('style', 'visibility: hidden');
+};
+
+const clickUsersAdmin = async () => {
+    let users = await sendAjaxRequest('/getUsersDataFromDB');
+    let user = null;
+    this._usersModel = new Model()._users;
+
+    for (let i = 0; i < users.length; i++) {
+        user = new User(users[i]._firstName, users[i]._lastName, users[i]._date, users[i]._email, users[i]._password, users[i]._userType);
+        this._usersModel.setUser(user);
+    }
+
+    drawUsersInfo();
+    clearCurrentHeaderFunc();
+
+    users = this._usersModel.getUsers();
+
+    for (let i = 0, j = 1; i < users.length; i++) {
         if (users[i]._userType === 'user') {
-            addTableRow(i , users[i]._firstName, users[i]._lastName, users[i]._date, users[i]._email);
+            drawUser(j, users[i]);
+            j++;
         }
     }
 };

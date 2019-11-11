@@ -22,6 +22,9 @@ const barberSchema = new mongoose.Schema({
     },
     salary: {
         type: Number,
+    },
+    fired: {
+        type: String,
     }
 });
 
@@ -52,7 +55,8 @@ BarbersDaoMongoDB.prototype.setBarber = async function (object) {
         age: object._age,
         experience: object._experience,
         rating: object._rating,
-        salary: object._salary
+        salary: object._salary,
+        fired: object._fired,
     });
 };
 
@@ -67,6 +71,13 @@ BarbersDaoMongoDB.prototype.getBarber = async function (email) {
 BarbersDaoMongoDB.prototype.updateBarber = async function (email, newSalary) {
     await this._model.findOne({email}, (err, doc) => {
         doc.salary = newSalary;
+        doc.save();
+    });
+};
+
+BarbersDaoMongoDB.prototype.setFiredBarber = async function (email, date) {
+    await this._model.findOne({email}, (err, doc) => {
+        doc.fired = date;
         doc.save();
     });
 };
