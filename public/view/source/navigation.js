@@ -3293,16 +3293,16 @@ function drawHomePage(person) {
     button = document.createElement('button');
     button.setAttribute('id', 'store');
     button.setAttribute('class', 'header__item');
-    button.textContent = 'Магазин';
+    button.textContent = 'Товары';
 
     headerItems.append(button);
 
-    button = document.createElement('button');
-    button.setAttribute('id', 'about');
-    button.setAttribute('class', 'header__item');
-    button.textContent = 'О нас';
-
-    headerItems.append(button);
+    // button = document.createElement('button');
+    // button.setAttribute('id', 'about');
+    // button.setAttribute('class', 'header__item');
+    // button.textContent = 'О нас';
+    //
+    // headerItems.append(button);
 
     document.getElementById('headerFunc').innerHTML = '';
 
@@ -3395,7 +3395,7 @@ function drawAboutContent() {
     style.innerHTML = '#gmap_canvas img{max-width:none!important;background:none!important}';
 
     map.append(style);
-    
+
     mainDiv.append(map);
 
     main.append(mainDiv);
@@ -3409,4 +3409,177 @@ function drawAboutContent() {
     // //  </div>
     // //  <style>#gmap_canvas img{max-width:none!important;background:none!important}</style>
     // </div><br />
+}
+
+function drawPersonalUserPage(person, records) {
+    document.getElementById('main').innerHTML = '';
+
+    const main = document.getElementById('main');
+
+    const mainDiv = document.createElement('div');
+    mainDiv.setAttribute('class', 'main__sections');
+
+    const headerText = document.createElement('h1');
+    headerText.setAttribute('class', 'service__title');
+    headerText.textContent = 'Личные данные';
+
+    mainDiv.append(headerText);
+
+    const divInfoPerson = document.createElement('div');
+    divInfoPerson.setAttribute('class', 'divInfoPerson');
+
+    const { _firstName, _lastName, _date, _email } = person;
+
+    const arrayKeys = ['Имя', 'Фамилия', 'Дата рождения', 'Почта'];
+    const arrayValues = [_firstName, _lastName, _date, _email];
+    let dataItemDiv, item;
+
+    for (let i = 0; i < arrayKeys.length; i++) {
+        dataItemDiv = document.createElement('div');
+        dataItemDiv.setAttribute('class', 'dataItemDiv');
+
+        item = document.createElement('div');
+        item.setAttribute('class', 'dataItemText');
+        item.textContent = arrayKeys[i];
+
+        dataItemDiv.append(item);
+
+        item = document.createElement('div');
+        item.setAttribute('class', 'dataItemText');
+        item.textContent = arrayValues[i];
+
+        dataItemDiv.append(item);
+
+        divInfoPerson.append(dataItemDiv);
+    }
+
+    mainDiv.append(divInfoPerson);
+
+    const recordsForFuture = document.createElement('div');
+    recordsForFuture.setAttribute('class', 'recordsForFuture');
+
+    let h2 = document.createElement('h2');
+    h2.setAttribute('class', 'headerText2');
+    h2.textContent = 'Мои записи';
+
+    recordsForFuture.append(h2);
+
+    let futureRecords = [], tempDay, tempMonth, tempYear, tempHour;
+
+    for (let i = 0; i < records.length; i++) {
+        tempDay = Number(records[i]._dateTime.slice(0, 2));
+        tempMonth = Number(records[i]._dateTime.slice(3, 5));
+        tempYear = Number(records[i]._dateTime.slice(6, 10));
+        tempHour = Number(records[i]._dateTime.slice(11, 13));
+
+        if (tempDay >= new Date().getDate() && tempMonth >= new Date().getMonth() && tempYear >= new Date().getFullYear() && tempHour >= (new Date().getHours() + 2 < 24 ? new Date().getHours() + 2 : (new Date().getHours() + 2) - 24)) {
+            futureRecords.push(records[i]);
+        }
+    }
+
+    if (futureRecords.length !== 0) {
+        for (let i = 0; i < futureRecords.length; i++) {
+            const section = document.createElement('section');
+            section.setAttribute('class', 'section__record');
+
+            let div = document.createElement('div');
+            div.setAttribute('class', 'section__record_item');
+
+            const {_firstName, _lastName, _email, _dateTime, _service, _barber} = futureRecords[i];
+            const array = [i + 1, _firstName, _lastName, _email, _dateTime, _service, _barber];
+
+            let item;
+
+            for (let j = 0; j < array.length; j++) {
+                item = document.createElement('div');
+
+                if (j === 3 || j === 4 || j === 6) {
+                    item.setAttribute('class', 'section__service_item-cell_email');
+                } else {
+                    item.setAttribute('class', 'section__service_item-cell_number');
+                }
+
+                item.textContent = array[j];
+
+                div.append(item);
+            }
+
+            section.append(div);
+
+            recordsForFuture.append(section);
+        }
+    } else {
+        const empty = document.createElement('p');
+        empty.setAttribute('class', 'text');
+        empty.textContent = 'У вас нет записей на ближайшее время.';
+
+        recordsForFuture.append(empty);
+    }
+
+    mainDiv.append(recordsForFuture);
+
+    const recordsLast = document.createElement('div');
+    recordsLast.setAttribute('class', 'recordsForFuture');
+
+    h2 = document.createElement('h2');
+    h2.setAttribute('class', 'headerText2');
+    h2.textContent = 'История';
+
+    recordsLast.append(h2);
+
+    let lastRecords = [];
+
+    for (let i = 0; i < records.length; i++) {
+        tempDay = Number(records[i]._dateTime.slice(0, 2));
+        tempMonth = Number(records[i]._dateTime.slice(3, 5));
+        tempYear = Number(records[i]._dateTime.slice(6, 10));
+        tempHour = Number(records[i]._dateTime.slice(11, 13));
+
+        if (tempDay < new Date().getDate() && tempMonth < new Date().getMonth() && tempYear < new Date().getFullYear() && tempHour < (new Date().getHours() + 2 < 24 ? new Date().getHours() + 2 : (new Date().getHours() + 2) - 24)) {
+            lastRecords.push(records[i]);
+        }
+    }
+
+    if (lastRecords.length !== 0) {
+        for (let i = 0; i < lastRecords.length; i++) {
+            const section = document.createElement('section');
+            section.setAttribute('class', 'section__record');
+
+            let div = document.createElement('div');
+            div.setAttribute('class', 'section__record_item');
+
+            const {_firstName, _lastName, _email, _dateTime, _service, _barber} = lastRecords[i];
+            const array = [i + 1, _firstName, _lastName, _email, _dateTime, _service, _barber];
+
+            let item;
+
+            for (let j = 0; j < array.length; j++) {
+                item = document.createElement('div');
+
+                if (j === 3 || j === 4 || j === 6) {
+                    item.setAttribute('class', 'section__service_item-cell_email');
+                } else {
+                    item.setAttribute('class', 'section__service_item-cell_number');
+                }
+
+                item.textContent = array[j];
+
+                div.append(item);
+            }
+
+            section.append(div);
+
+            recordsLast.append(section);
+        }
+    } else {
+        const empty = document.createElement('p');
+        empty.setAttribute('class', 'text');
+        empty.textContent = 'История отсутствует.';
+
+        recordsLast.append(empty);
+    }
+
+    mainDiv.append(recordsLast);
+
+    main.append(mainDiv);
 }

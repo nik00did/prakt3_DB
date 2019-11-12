@@ -83,7 +83,7 @@ function View() {
         this._service = document.getElementById('services');
         this._barbers = document.getElementById('barbers');
         this._store = document.getElementById('store');
-        this._about = document.getElementById('about');
+        // this._about = document.getElementById('about');
         this._logIn = document.getElementById('logIn');
         this._record = document.getElementById('record');
         this._scrollDown = document.getElementById('scroll');

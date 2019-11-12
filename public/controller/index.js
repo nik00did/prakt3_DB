@@ -88,7 +88,7 @@ Controller.prototype.init = async () => {
     this._view._record.onclick = clickRecord;
     this._view._scrollDown.onclick = clickScrollDown;
     this._view._recording.onclick = clickRecord;
-    this._view._about.onclick = clickAbout;
+    // this._view._about.onclick = clickAbout;
 };
 
 const clickHome = () => {
@@ -382,7 +382,7 @@ const clickLogOut = () => {
     this._view._record.onclick = clickRecord;
     this._view._scrollDown.onclick = clickScrollDown;
     this._view._recording.onclick = clickRecord;
-    this,_view._about.onclick = clickAbout;
+    // this,_view._about.onclick = clickAbout;
 };
 
 const clickSubmitLogIn = () => {
@@ -438,7 +438,10 @@ const clickSubmitLogIn = () => {
                     this._view._recording.onclick = clickRecord;
                     this._view.getAllIdMenu();
 
+                    this._view._mine = document.getElementById('mine');
+
                     this._view._scrollDown.onclick = clickScrollDown;
+                    this._view._mine.onclick = clickMine;
 
                     break;
                 case 'blackList':
@@ -469,6 +472,24 @@ const clickSubmitLogIn = () => {
     } else {
         alert('Wrong input data!');
     }
+};
+
+const clickMine = () => {
+    let recordsCurrentUser = [];
+
+    for (let i = 0; i < this._recordsModel.getRecords().length; i++) {
+        if (this._recordsModel.getRecords()[i]._email === this._currentUser._email) {
+            recordsCurrentUser.push(this._recordsModel.getRecords()[i]);
+        }
+    }
+
+    console.log(this._recordsModel.getRecords());
+
+    drawPersonalUserPage(this._currentUser, recordsCurrentUser);
+    clearCurrentHeaderFunc();
+    clearCurrentHeaderItem();
+    document.getElementById('mine').classList.add('currentHeaderItem');
+
 };
 
 const confirmSendAdminEmail = () => {
@@ -1178,8 +1199,7 @@ const openModalSuccessRecorder = data => {
 
     const sendData = {firstName, email, date, time, service, sendBarber, image};
 
-    this._sendData.postRequest('/sendEmail', sendData, () => {
-    });
+    this._sendData.postRequest('/sendEmail', sendData, () => {});
 };
 
 const closeModalSuccessRecorder = () => {
@@ -1201,14 +1221,26 @@ const closeModalSuccessRecorder = () => {
 };
 
 const clickSetRecord = () => {
-    const data = {
-        firstName: document.getElementById('firstName').value,
-        lastName: document.getElementById('lastName').value,
-        email: document.getElementById('email').value,
-        dateTime: `${document.getElementById('date').value}.${document.getElementById('time').value}`,
-        service: document.getElementById('selectService').value.split(',')[0],
-        barber: document.getElementById('select').value.split(' ')[2],
-    };
+    let data;
+    if (!this._currentUser) {
+         data = {
+            firstName: document.getElementById('firstName').value,
+            lastName: document.getElementById('lastName').value,
+            email: document.getElementById('email').value,
+            dateTime: `${document.getElementById('date').value}.${document.getElementById('time').value}`,
+            service: document.getElementById('selectService').value.split(',')[0],
+            barber: document.getElementById('select').value.split(' ')[2],
+        };
+    } else {
+        data = {
+            firstName: this._currentUser._firstName,
+            lastName: this._currentUser._lastName,
+            email: this._currentUser._email,
+            dateTime: `${document.getElementById('date').value}.${document.getElementById('time').value}`,
+            service: document.getElementById('selectService').value.split(',')[0],
+            barber: document.getElementById('select').value.split(' ')[2],
+        };
+    }
 
     let url = '/addRecords';
 
