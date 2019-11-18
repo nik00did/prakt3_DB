@@ -22,7 +22,7 @@ button{
 }
 .header {
     background-color:#000000;
-    width: 90%;
+    width: 100%;
     height: 70px;
     display: flex;
     justify-content: space-between;
@@ -528,7 +528,7 @@ img {
 }
 
 .footer {
-    width: 90%;
+    width: 100%;
     height: 50px;
     position: absolute;
     bottom: 0px;
@@ -543,6 +543,7 @@ img {
     border-radius: 10px;
     height: 100%;
     padding: 5px;
+    cursor: default;
 }
 
 .footer__item p:hover {
@@ -723,6 +724,7 @@ img {
 }
 
 .section__service {
+    cursor: pointer;
     width: 70%;
     background-color: rgba(255, 255, 255, 0.5);
     display: flex;
@@ -858,6 +860,7 @@ img {
     justify-content: center;
     align-content: center;
     padding-top: 15px;
+    cursor: default;
 }
 
 .section__store_item-cell_number {
@@ -866,6 +869,7 @@ img {
     justify-content: center;
     align-content: center;
     padding-top: 15px;
+    cursor: default;
 }
 
 .section__barber_item-cell_email {
@@ -882,6 +886,7 @@ img {
     justify-content: center;
     align-content: center;
     padding-top: 15px;
+    cursor: default;
 }
 
 .section__barber_item-cell_name {
@@ -947,8 +952,8 @@ img {
 }
 
 .modal__window {
-    width: 450px;
-    height: 500px;
+    width: 600px;
+    height: 400px;
     text-align: center;
     padding: 15px;
     position: absolute;
@@ -987,6 +992,26 @@ img {
 }
 
 .modal__window_sendEmailToAdmin {
+    width: 450px;
+    height: 300px;
+    text-align: center;
+    padding: 15px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    align-self: center;
+}
+
+.modal__window_logOut {
     width: 450px;
     height: 300px;
     text-align: center;
@@ -1282,7 +1307,7 @@ input {
     border: 0;
     padding:0 5px;
     font-size: 15px;
-    width: 170px;
+    width: 230px;
 }
 
 /* input[type=date]::-webkit-calendar-picker-indicator {
@@ -1363,3 +1388,86 @@ select {
 ::-webkit-scrollbar-thumb { height: 50px; background-color: #666; border-radius: 3px;}
 ::-webkit-scrollbar-corner { background-color: #999;}
 ::-webkit-resizer { background-color: #666;}
+
+#form {
+    width: 500px;
+}
+
+.loading {
+    position: absolute;
+    z-index: 10;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-self: center;
+    background-color: #000;
+}
+
+.loader-1 {
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    top: 50%;
+    margin: -25px auto 0;
+    border-radius: 50%;
+    background: #ffffff;
+    background: -moz-linear-gradient(left, #ffffff 10%, rgba(255, 255, 255, 0) 50%);
+    background: -webkit-linear-gradient(left, #ffffff 10%, rgba(255, 255, 255, 0) 50%);
+    background: -o-linear-gradient(left, #ffffff 10%, rgba(255, 255, 255, 0) 50%);
+    background: -ms-linear-gradient(left, #ffffff 10%, rgba(255, 255, 255, 0) 50%);
+    background: linear-gradient(to right, #ffffff 10%, rgba(255, 255, 255, 0) 50%);
+    position: relative;
+    -webkit-animation: loader-1 1.5s infinite linear;
+    animation: loader-1 1.5s infinite linear;
+    -webkit-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    transform: translateZ(0);
+}
+
+.loader-1:before {
+    content: '';
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: #ffffff;
+    border-radius: 100% 0 0 0;
+}
+
+.loader-1:after {
+    content: '';
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #e6b42c;
+    margin: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+@-webkit-keyframes loader-1 {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes loader-1 {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}

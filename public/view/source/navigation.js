@@ -1,3 +1,22 @@
+function loading() {
+    const page = document.getElementsByTagName('body')[0];
+
+    const modalDiv = document.createElement('div');
+    modalDiv.setAttribute('class', 'loading');
+    modalDiv.setAttribute('id', 'loading');
+
+    const loader = document.createElement('div');
+    loader.setAttribute('class', 'loader-1');
+
+    modalDiv.append(loader);
+
+    page.append(modalDiv);
+
+    setTimeout(() => {
+        document.getElementById('loading').remove();
+    }, 1000);
+}
+
 function drawHomeContent(person) {
     document.getElementById("main").innerHTML = '';
 
@@ -123,7 +142,7 @@ function drawScrollDown() {
 
     let h3 = document.createElement('h3');
     h3.setAttribute('class', 'section__title');
-    h3.textContent = 'Предлагаемые услуги';
+    h3.textContent = 'Топ наших услуг';
 
     section.append(h3);
 
@@ -215,7 +234,7 @@ function drawScrollDown() {
 
     h3 = document.createElement('h3');
     h3.setAttribute('class', 'section__title');
-    h3.textContent = 'Наши барберы';
+    h3.textContent = 'Топ барберы';
 
     section.append(h3);
 
@@ -246,7 +265,7 @@ function drawScrollDown() {
 
     let barberDivTitle = document.createElement('h3');
     barberDivTitle.setAttribute('class', 'service__item_title');
-    barberDivTitle.textContent = 'Барбер 1';
+    barberDivTitle.textContent = 'Никита';
 
     barberDivHeader.append(barberDivTitle);
 
@@ -268,7 +287,7 @@ function drawScrollDown() {
 
     barberDivTitle = document.createElement('h3');
     barberDivTitle.setAttribute('class', 'service__item_title');
-    barberDivTitle.textContent = 'Барбер 2';
+    barberDivTitle.textContent = 'Тарас';
 
     barberDivHeader.append(barberDivTitle);
     barberDiv.append(barberDivHeader);
@@ -289,7 +308,7 @@ function drawScrollDown() {
 
     barberDivTitle = document.createElement('h3');
     barberDivTitle.setAttribute('class', 'service__item_title');
-    barberDivTitle.textContent = 'Барбер 3';
+    barberDivTitle.textContent = 'Даниил';
 
     barberDivHeader.append(barberDivTitle);
     barberDiv.append(barberDivHeader);
@@ -307,7 +326,7 @@ function drawScrollDown() {
 
     h3 = document.createElement('h3');
     h3.setAttribute('class', 'section__title');
-    h3.textContent = 'Товары';
+    h3.textContent = 'Топ товаров';
 
     section.append(h3);
 
@@ -325,7 +344,7 @@ function drawScrollDown() {
 
     let storeDivTitle = document.createElement('h3');
     storeDivTitle.setAttribute('class', 'service__item_title');
-    storeDivTitle.textContent = 'Товар 1';
+    storeDivTitle.textContent = 'Гель-воск';
 
     storeDivHeader.append(storeDivTitle);
 
@@ -347,7 +366,7 @@ function drawScrollDown() {
 
     storeDivTitle = document.createElement('h3');
     storeDivTitle.setAttribute('class', 'service__item_title');
-    storeDivTitle.textContent = 'Товар 2';
+    storeDivTitle.textContent = 'Гель';
 
     storeDivHeader.append(storeDivTitle);
 
@@ -369,7 +388,7 @@ function drawScrollDown() {
 
     storeDivTitle = document.createElement('h3');
     storeDivTitle.setAttribute('class', 'service__item_title');
-    storeDivTitle.textContent = 'Товар 3';
+    storeDivTitle.textContent = 'Крем для волос';
 
     storeDivHeader.append(storeDivTitle);
 
@@ -1413,16 +1432,14 @@ function drawLogInContent() {
 
     let label = document.createElement('label');
     label.setAttribute('for','email');
-    label.textContent = 'Email:';
+    label.textContent = 'Почта:';
 
     formItem.append(label);
 
     let input = document.createElement('input');
     input.setAttribute('id','email');
     input.setAttribute('type', 'email');
-    input.setAttribute('onblur', 'validateInput("email", "wrongInputDataInfoEmail")');
-    input.setAttribute('onfocus', 'removeInvalid("email", "wrongInputDataInfoEmail")');
-    input.setAttribute('placeholder', '<...>@gmail.com');
+    input.setAttribute('placeholder', 'yourEmail@gmail.com');
 
     formItem.append(input);
 
@@ -1439,7 +1456,7 @@ function drawLogInContent() {
 
     label = document.createElement('label');
     label.setAttribute('for','password');
-    label.textContent = 'Password:';
+    label.textContent = 'Пароль:';
 
     formItem.append(label);
 
@@ -3265,6 +3282,16 @@ function drawUserPage(type) {
 }
 
 function drawHomePage(person) {
+    if (person && person._userType === 'admin') {
+        document.getElementsByTagName('body')[0].setAttribute('style', 'background-image: url("../view/image/icon10.png")');
+    } else if (person && person._userType === 'user') {
+        document.getElementsByTagName('body')[0].setAttribute('style', 'background-image: url("../view/image/icon11.png")');
+    } else if (person && person._userType === 'blackList') {
+        document.getElementsByTagName('body')[0].setAttribute('style', 'background-image: url("../view/image/icon14.png")');
+    } else {
+        document.getElementsByTagName('body')[0].setAttribute('style', 'background-image: url("../view/image/icon13.jpg")');
+    }
+
     document.getElementById('headerItems').innerHTML = '';
 
     const headerItems = document.getElementById('headerItems');
@@ -3297,30 +3324,87 @@ function drawHomePage(person) {
 
     headerItems.append(button);
 
-    // button = document.createElement('button');
-    // button.setAttribute('id', 'about');
-    // button.setAttribute('class', 'header__item');
-    // button.textContent = 'О нас';
-    //
-    // headerItems.append(button);
+    if (person && (person._userType === 'user' || person._userType === 'blackList')) {
+        button = document.createElement('button');
+        button.setAttribute('id', 'mine');
+        button.setAttribute('class', 'header__item');
+        button.textContent = 'Мое';
+
+        headerItems.append(button);
+    }
 
     document.getElementById('headerFunc').innerHTML = '';
 
     const headerFunc = document.getElementById('headerFunc');
 
     button = document.createElement('button');
-    button.setAttribute('id', 'record');
     button.setAttribute('class', 'header__item');
-    button.textContent = 'Запись';
+
+    if (!person || person._userType !== 'admin') {
+        button.setAttribute('id', 'record');
+        button.textContent = 'Запись';
+    } else {
+        button.setAttribute('id', 'data');
+        button.textContent = 'Данные';
+    }
 
     headerFunc.append(button);
 
     button = document.createElement('button');
-    button.setAttribute('id', 'logIn');
     button.setAttribute('class', 'header__item');
-    button.textContent = 'Вход';
+
+    if (!person) {
+        button.setAttribute('id', 'logIn');
+        button.textContent = 'Вход';
+    } else {
+        button.setAttribute('id', 'logOut');
+        button.textContent = 'Выход';
+    }
 
     headerFunc.append(button);
+
+    if (person) {
+        console.log('add modal for log out');
+        const header = document.getElementById('header');
+
+        let modalDiv = document.createElement('div');
+        modalDiv.setAttribute('class', 'modal__back');
+        modalDiv.setAttribute('id', 'modal__back_logOut');
+
+        let window = document.createElement('div');
+        window.setAttribute('class', 'modal__window_logOut');
+
+        let formContent = document.createElement('div');
+        formContent.setAttribute('class', 'form_content');
+        formContent.textContent = 'Вы уверены, что хотите выйти из этого акаунта?';
+
+        window.append(formContent);
+
+        let divButtons = document.createElement('div');
+        divButtons.setAttribute('class', 'formDivButtons');
+
+        let buttonLogIn = document.createElement('button');
+        buttonLogIn.setAttribute('id', 'cancelLogOut');
+        buttonLogIn.setAttribute('class', 'form__item_button-modal');
+        buttonLogIn.setAttribute('type', 'button');
+        buttonLogIn.textContent = 'Нет';
+
+        divButtons.append(buttonLogIn);
+
+        let buttonSignUp = document.createElement('button');
+        buttonSignUp.setAttribute('id', 'confirmLogOut');
+        buttonSignUp.setAttribute('class', 'form__item_button-modal');
+        buttonSignUp.setAttribute('type', 'button');
+        buttonSignUp.textContent = 'Да';
+
+        divButtons.append(buttonSignUp);
+
+        window.append(divButtons);
+
+        modalDiv.append(window);
+
+        header.append(modalDiv);
+    }
 
     document.getElementById('main').innerHTML = '';
 

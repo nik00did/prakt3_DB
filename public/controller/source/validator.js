@@ -44,26 +44,6 @@ ValidatorServices.prototype.isValidInputed = (type, price) => {
     return isInput(type) && isInput(price);
 };
 
-// function ValidatorRecords(array) {
-//     this._array = array;
-//
-//     this.isFreeDateTime = dateTime => {
-//         for (let i = 0; i < this._array.length; i++) {
-//             const temp = this._array[i];
-//
-//             if (temp._dateTime === dateTime) {
-//                 return true;
-//             }
-//         }
-//
-//         return false;
-//     };
-// }
-
-// ValidatorOrders.prototype.isValidInputed = (firstName, lastName, email, date, time, service, barber) => {
-//     return isInput(firstName) && isInput(lastName) && isInput(email) && isInput(date) && isInput(time) && isInput(service) && isInput(barber);
-// };
-
 function ValidatorStore(store) {
     this._store = store;
 

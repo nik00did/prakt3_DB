@@ -76,6 +76,10 @@ Controller.prototype.init = async () => {
     this._barbersValidator = new Validator(this._barbersModel.getBarbers());
     this._storeValidator = new ValidatorStore(this._storeModel.getStore());
 
+    this._currentUser = this._usersModel.getUserByEmail(localStorage.getItem('userEmail'));
+
+    drawHomePage(this._currentUser);
+
     this._view = new View();
     this._view.getAllIdMenu();
 
@@ -83,12 +87,28 @@ Controller.prototype.init = async () => {
     this._view._service.onclick = clickServices;
     this._view._barbers.onclick = clickBarbers;
     this._view._store.onclick = clickStore;
-    this._view._logIn.onclick = clickLogIn;
 
-    this._view._record.onclick = clickRecord;
+    if (this._currentUser) {
+        this._view._logOut = document.getElementById('logOut');
+        this._view._logOut.onclick = clickLogOut;
+    } else {
+        this._view._logIn.onclick = clickLogIn;
+    }
+
+    if (this._currentUser && (this._currentUser._userType === 'user' || this._currentUser._userType === 'blackList')) {
+        this._view._mine = document.getElementById('mine');
+        this._view._mine.onclick = clickMine;
+    }
+
     this._view._scrollDown.onclick = clickScrollDown;
-    this._view._recording.onclick = clickRecord;
-    // this._view._about.onclick = clickAbout;
+
+    if (!this._currentUser || this._currentUser._userType !== 'admin') {
+        this._view._recording.onclick = clickRecord;
+        this._view._record.onclick = clickRecord;
+    } else {
+        this._view._data = document.getElementById('data');
+        this._view._data.onclick = clickAdminData;
+    }
 };
 
 const clickHome = () => {
@@ -348,7 +368,7 @@ const validateInput = (input, blockWrongData) => {
 
     if (!inputBlock.value.endsWith('@gmail.com') && !inputBlock.classList.contains('wrongInputData')) {
         inputBlock.classList.add('wrongInputData');
-        blockWrongDataInfo.textContent = 'Неверно набранная почта (<...>@gmail.com)';
+        blockWrongDataInfo.textContent = 'Неверно набранная почта (yourEmail@gmail.com)';
     }
 };
 
@@ -362,7 +382,10 @@ const removeInvalid = (input, blockWrongData) => {
     }
 };
 
-const clickLogOut = () => {
+const confirmLogOut = () => {
+    loading();
+    document.getElementById('modal__back_logOut').setAttribute('style', 'visibility: hidden');
+
     if (this._currentUser._userType === 'user') {
         document.getElementById('mine').remove();
     }
@@ -370,6 +393,7 @@ const clickLogOut = () => {
     this._currentUser = null;
     drawHomePage(this._currentUser);
     document.getElementById('home').classList.add('currentHeaderItem');
+    localStorage.removeItem('userEmail');
 
     this._view = new View();
     this._view.getAllIdMenu();
@@ -382,10 +406,24 @@ const clickLogOut = () => {
     this._view._record.onclick = clickRecord;
     this._view._scrollDown.onclick = clickScrollDown;
     this._view._recording.onclick = clickRecord;
-    // this,_view._about.onclick = clickAbout;
+};
+
+const cancelLogOut = () => {
+    document.getElementById('modal__back_logOut').setAttribute('style', 'visibility: hidden');
+};
+
+const clickLogOut = () => {
+    document.getElementById('modal__back_logOut').setAttribute('style', 'visibility: visible');
+
+    this._view._confirmLogOut = document.getElementById('confirmLogOut');
+    this._view._confirmLogOut.onclick = confirmLogOut;
+
+    this._view._cancelLogOut = document.getElementById('cancelLogOut');
+    this._view._cancelLogOut.onclick = cancelLogOut;
 };
 
 const clickSubmitLogIn = () => {
+    loading();
     this._view._email = document.getElementById('email');
     this._view._password = document.getElementById('password');
 
@@ -398,74 +436,124 @@ const clickSubmitLogIn = () => {
 
     if (this._usersValidator.isValidLogIn(data.email, data.password)) {
         if (this._usersValidator.isSignedUp(data.email)) {
+            if (data.password === this._usersModel.getUserByEmail(data.email)._password) {
+                this._sendData.postRequest(url, data, rez => {
+                    const rezObject = JSON.parse(rez);
 
-            this._sendData.postRequest(url, data, rez => {
-                const rezObject = JSON.parse(rez);
+                    if (rezObject.rez !== 'bad_reg') {
+                    }
+                });
 
-                if (rezObject.rez !== 'bad_reg') {
+                const users = this._usersModel.getUsers();
+                let userType;
+
+                for (let i = 0; i < users.length; i++) {
+                    if (users[i]._email === data.email) {
+                        userType = users[i]._userType;
+                        this._currentUser = Object.create(users[i]);
+                    }
                 }
-            });
 
-            const users = this._usersModel.getUsers();
-            let userType;
+                switch (userType) {
+                    case 'admin':
+                        drawAdminPage();
+                        drawHomeContent(this._currentUser);
+                        document.getElementById('home').classList.add('currentHeaderItem');
 
-            console.log(users);
+                        this._view._adminData = document.getElementById('data');
+                        this._view._adminData.onclick = clickAdminData;
+                        this._view.getAllIdMenu();
 
-            for (let i = 0; i < users.length; i++) {
-                if (users[i]._email === data.email) {
-                    userType = users[i]._userType;
-                    this._currentUser = Object.create(users[i]);
+                        this._view._scrollDown.onclick = clickScrollDown;
+
+                        document.getElementsByTagName('body')[0].setAttribute('style', 'background-image: url("../view/image/icon10.png")');
+
+                        break;
+                    case 'user':
+                        drawUserPage();
+                        drawHomeContent(this._currentUser);
+                        document.getElementById('home').classList.add('currentHeaderItem');
+                        this._view._recording.onclick = clickRecord;
+                        this._view.getAllIdMenu();
+
+                        this._view._mine = document.getElementById('mine');
+
+                        this._view._scrollDown.onclick = clickScrollDown;
+                        this._view._mine.onclick = clickMine;
+
+                        document.getElementsByTagName('body')[0].setAttribute('style', 'background-image: url("../view/image/icon11.png")');
+
+                        break;
+                    case 'blackList':
+                        drawUserPage('blackList');
+                        drawHomeContent(this._currentUser);
+                        document.getElementById('home').classList.add('currentHeaderItem');
+
+                        this._view._home.onclick = null;
+                        this._view._service.onclick = null;
+                        this._view._barbers.onclick = null;
+                        this._view._store.onclick = null;
+                        this._view._logIn.onclick = null;
+                        this._view._record.onclick = null;
+                        this._view._scrollDown.onclick = null;
+                        this._view._recording.onclick = null;
+                        this._view._canselSendAdminEmail = document.getElementById('cancelSendEmailToAdmin');
+                        this._view._canselSendAdminEmail.onclick = cancelSendAdminEmail;
+                        this._view._confirmSendAdminEmail = document.getElementById('confirmSendEmailToAdmin');
+                        this._view._confirmSendAdminEmail.onclick = confirmSendAdminEmail;
+
+                        document.getElementsByTagName('body')[0].setAttribute('style', 'background-image: url("../view/image/icon14.png")');
+
+                        break;
                 }
+
+                const header = document.getElementById('header');
+
+                let modalDiv = document.createElement('div');
+                modalDiv.setAttribute('class', 'modal__back');
+                modalDiv.setAttribute('id', 'modal__back_logOut');
+
+                let window = document.createElement('div');
+                window.setAttribute('class', 'modal__window_logOut');
+
+                let formContent = document.createElement('div');
+                formContent.setAttribute('class', 'form_content');
+                formContent.textContent = 'Вы уверены, что хотите выйти из этого акаунта?';
+
+                window.append(formContent);
+
+                let divButtons = document.createElement('div');
+                divButtons.setAttribute('class', 'formDivButtons');
+
+                let buttonLogIn = document.createElement('button');
+                buttonLogIn.setAttribute('id', 'cancelLogOut');
+                buttonLogIn.setAttribute('class', 'form__item_button-modal');
+                buttonLogIn.setAttribute('type', 'button');
+                buttonLogIn.textContent = 'Нет';
+
+                divButtons.append(buttonLogIn);
+
+                let buttonSignUp = document.createElement('button');
+                buttonSignUp.setAttribute('id', 'confirmLogOut');
+                buttonSignUp.setAttribute('class', 'form__item_button-modal');
+                buttonSignUp.setAttribute('type', 'button');
+                buttonSignUp.textContent = 'Да';
+
+                divButtons.append(buttonSignUp);
+
+                window.append(divButtons);
+
+                modalDiv.append(window);
+
+                header.append(modalDiv);
+
+                this._view._logOut = document.getElementById('logOut');
+                this._view._logOut.onclick = clickLogOut;
+
+                localStorage.setItem('userEmail', this._currentUser._email);
+            } else {
+                alert('Пароль не совпадает!');
             }
-
-            switch (userType) {
-                case 'admin':
-                    drawAdminPage();
-                    drawHomeContent(this._currentUser);
-                    document.getElementById('home').classList.add('currentHeaderItem');
-
-                    this._view._adminData = document.getElementById('data');
-                    this._view._adminData.onclick = clickAdminData;
-                    this._view.getAllIdMenu();
-
-                    this._view._scrollDown.onclick = clickScrollDown;
-
-                    break;
-                case 'user':
-                    drawUserPage();
-                    drawHomeContent(this._currentUser);
-                    document.getElementById('home').classList.add('currentHeaderItem');
-                    this._view._recording.onclick = clickRecord;
-                    this._view.getAllIdMenu();
-
-                    this._view._mine = document.getElementById('mine');
-
-                    this._view._scrollDown.onclick = clickScrollDown;
-                    this._view._mine.onclick = clickMine;
-
-                    break;
-                case 'blackList':
-                    drawUserPage('blackList');
-                    drawHomeContent(this._currentUser);
-                    document.getElementById('home').classList.add('currentHeaderItem');
-
-                    this._view._home.onclick = null;
-                    this._view._service.onclick = null;
-                    this._view._barbers.onclick = null;
-                    this._view._store.onclick = null;
-                    this._view._logIn.onclick = null;
-                    this._view._record.onclick = null;
-                    this._view._scrollDown.onclick = null;
-                    this._view._recording.onclick = null;
-                    this._view._canselSendAdminEmail = document.getElementById('cancelSendEmailToAdmin');
-                    this._view._canselSendAdminEmail.onclick = cancelSendAdminEmail;
-                    this._view._confirmSendAdminEmail = document.getElementById('confirmSendEmailToAdmin');
-                    this._view._confirmSendAdminEmail.onclick = confirmSendAdminEmail;
-                    break;
-            }
-
-            this._view._logOut = document.getElementById('logOut');
-            this._view._logOut.onclick = clickLogOut;
         } else {
             alert('Not found email!');
         }
@@ -836,16 +924,6 @@ const setFiredBarber = async () => {
     await clickWatchBarbers();
 };
 
-// const confirmDeleteBarber = async () => {
-//     let email = this._barbersModel.getBarberByEmail(this._view._currentBarbersEmailForDelete)._email;
-//     const data = {email};
-//     let url = '/deleteBarberByEmail';
-//
-//     this._sendData.postRequest(url, data, () => {});
-//
-//     await clickWatchBarbers();
-// };
-
 const clickWatchBarbers = async () => {
     console.log('clickWatchBarbers');
 
@@ -1204,7 +1282,10 @@ const openModalSuccessRecorder = data => {
 
 const closeModalSuccessRecorder = () => {
     document.getElementById('modal__back_record').setAttribute('style', 'visibility: hidden;');
-    drawHomePage(this._currentUser);
+    clearCurrentHeaderFunc();
+    clearCurrentHeaderItem();
+    console.log(this._currentUser);
+    drawHomeContent(this._currentUser);
     document.getElementById('home').classList.add('currentHeaderItem');
 
     this._view = new View();
@@ -1214,7 +1295,12 @@ const closeModalSuccessRecorder = () => {
     this._view._service.onclick = clickServices;
     this._view._barbers.onclick = clickBarbers;
     this._view._store.onclick = clickStore;
-    this._view._logIn.onclick = clickLogIn;
+
+    if (this._currentUser) {
+        this._view._logOut.onclick = clickLogOut;
+    } else {
+        this._view._logIn.onclick = clickLogIn;
+    }
     this._view._record.onclick = clickRecord;
     this._view._scrollDown.onclick = clickScrollDown;
     this._view._recording.onclick = clickRecord;
@@ -1244,24 +1330,36 @@ const clickSetRecord = () => {
 
     let url = '/addRecords';
 
-    if (isInput(data.firstName)) {
-        if (isInput(data.lastName)) {
-            if (isInput(data.email)) {
-                this._sendData.postRequest(url, data, res => {
-                    const newRecord = JSON.parse(res);
+    if (isInput(data.firstName) && data.firstName.search(/\d/g) === -1) {
+        if (isInput(data.lastName && data.lastName.search(/\d/g) === -1)) {
+            if (isInput(data.email) && data.email.search(/@gmail\.com/g) !== -1) {
+                if (data.dateTime !== 'не выбрана.не выбрано') {
+                    if (data.barber !== 'не выбран') {
+                        if (data.service !== 'не выбрана') {
+                            this._sendData.postRequest(url, data, res => {
+                                const newRecord = JSON.parse(res);
 
-                    this._recordsModel.setRecord(newRecord);
-                });
+                                this._recordsModel.setRecord(newRecord);
+                            });
 
-                openModalSuccessRecorder(data);
+                            openModalSuccessRecorder(data);
+                        } else {
+                            alert('Не выбрана услуга');
+                        }
+                    } else {
+                        alert('Не выбран бырбер');
+                    }
+                } else {
+                    alert('Не выбрана точная дата и время');
+                }
             } else {
-                alert('Неверная почта!');
+                alert('Неверная почта! Поле должно содержать "@gmail.com" конце.');
             }
         } else {
-            alert('Неверная фамилия!');
+            alert('Неверная фамилия! Поле не должно быть  пустым или содержать числа.');
         }
     } else {
-        alert('Неверное имя!');
+        alert('Неверное имя! Поле не должно быть  пустым или содержать числа.');
     }
 };
 
@@ -2012,11 +2110,54 @@ const setOnChangeFreeDaysAndHours = () => {
             option.setAttribute('style', 'display: none;');
         }
 
+
         time.append(option);
     }
 };
 
-const clickRecord = () => {
+const clickRecord = async () => {
+    let users = await sendAjaxRequest('/getUsersDataFromDB');
+    let user = null;
+
+    this._usersModel = new Model()._users;
+
+    for (let i = 0; i < users.length; i++) {
+        user = new User(users[i]._firstName, users[i]._lastName, users[i]._date, users[i]._email, users[i]._password, users[i]._userType);
+        this._usersModel.setUser(user);
+    }
+
+    let barbers = await sendAjaxRequest('/getBarbersDataFromDB');
+    let barber = null;
+
+    this._barbersModel = new Model()._barbers;
+
+    for (let i = 0; i < barbers.length; i++) {
+        if (barbers[i]._fired === '-') {
+            barber = new Barber(barbers[i]._firstName, barbers[i]._lastName, barbers[i]._email, barbers[i]._age, barbers[i]._experience, barbers[i]._salary, barbers[i]._rating, barbers[i]._fired);
+            this._barbersModel.setBarber(barber);
+        }
+    }
+
+    let services = await sendAjaxRequest('/getServicesDataFromDB');
+    let service = null;
+
+    this._servicesModel = new Model()._services;
+
+    for (let i = 0; i < services.length; i++) {
+        service = new Service(services[i]._type, services[i]._price);
+        this._servicesModel.setService(service);
+    }
+
+    let records = await sendAjaxRequest('/getRecordsDataFromDB');
+    let record = null;
+
+    this._recordsModel = new Model()._records;
+
+    for (let i = 0; i < records.length; i++) {
+        record = new Record(records[i]._firstName, records[i]._lastName, records[i]._email, records[i]._dateTime, records[i]._service, records[i]._barber);
+        this._recordsModel.setRecord(record);
+    }
+
     drawRecordContent(this._servicesModel.getServices(), this._barbersModel.getBarbers(), this._view._defaultBarber, this._view._defaultService, this._currentUser, this._recordsModel.getRecords());
     clearCurrentHeaderItem();
     clearCurrentHeaderFunc();
